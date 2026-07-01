@@ -45,17 +45,47 @@
       </div>
     </div>
 
-    <!-- Modál na zadanie hesla (neutrálny — neodhaľuje názov lokácie, BR-003) -->
-    <div id="modal-heslo" class="modal skryta" role="dialog" aria-modal="true"
-         aria-labelledby="modal-vyzva">
-      <div class="modal-panel">
-        <label id="modal-vyzva" class="modal-vyzva" for="pole-heslo">Zadajte heslo</label>
-        <input id="pole-heslo" class="pole-heslo" type="text"
-               autocomplete="off" autocapitalize="characters" spellcheck="false" />
-        <p id="sprava-heslo" class="sprava-heslo" aria-live="polite"></p>
-        <div class="modal-tlacidla">
-          <button id="tlacidlo-zrusit" class="tlacidlo" type="button">Zrušiť</button>
-          <button id="tlacidlo-odomknut" class="tlacidlo tlacidlo-hlavne" type="button">Odomknúť</button>
+    <!--
+      Obr.3 CLUE PERGAMEN — voľne rozmiestnené clue slová dňa; vedúci klikne ĎALEJ.
+      Neutrálny (neodhaľuje názov lokácie, BR-003). Slová vykreslí app.js zo stavu.
+      Prekrytie (.pergamen-obal) je zároveň tlmivé pozadie modálu nad mapou.
+    -->
+    <div id="clue-pergamen" class="pergamen-obal skryta" role="dialog" aria-modal="true"
+         aria-label="Indície pre dnešné heslo">
+      <div class="pergamen">
+        <img class="pergamen-pozadie" src="app_images/pregamen.png" alt="" />
+        <!-- Voľne rozmiestnené clue slová (pozície z DNI[].clue) v písacej ploche -->
+        <div class="pergamen-plocha">
+          <div id="clue-slova" class="clue-slova"></div>
+          <button id="tlacidlo-dalej" class="tlacidlo tlacidlo-hlavne pergamen-akcia"
+                  type="button">Ďalej</button>
+        </div>
+      </div>
+    </div>
+
+    <!--
+      Obr.4 HESLO PERGAMEN — zadanie hesla + ODOMKNÚŤ. Rovnaký štýl pergamenu.
+      Pri nesprávnom hesle sa pergamen zatrasie (obr.5) a ukáže neutrálnu správu.
+    -->
+    <div id="heslo-pergamen" class="pergamen-obal skryta" role="dialog" aria-modal="true"
+         aria-labelledby="heslo-vyzva">
+      <div id="heslo-pergamen-panel" class="pergamen">
+        <!-- Pozadie: pri správnom hesle app.js vymení src za ODOMKNUTIE.png (odopnutý zámok) -->
+        <img id="heslo-pozadie" class="pergamen-pozadie" src="app_images/pregamen.png" alt="" />
+        <!-- Obsah sa pri odomknutí skryje (trieda .skryta), aby ostal vidieť odopnutý zámok -->
+        <div id="heslo-obsah" class="pergamen-plocha">
+          <div class="pergamen-obsah">
+            <label id="heslo-vyzva" class="pergamen-vyzva" for="pole-heslo">
+              Zadajte dnešné heslo.
+            </label>
+            <input id="pole-heslo" class="pole-heslo" type="text"
+                   autocomplete="off" autocapitalize="characters" spellcheck="false" />
+            <p id="sprava-heslo" class="sprava-heslo" aria-live="polite"></p>
+            <div class="modal-tlacidla">
+              <button id="tlacidlo-zrusit" class="tlacidlo" type="button">Zrušiť</button>
+              <button id="tlacidlo-odomknut" class="tlacidlo tlacidlo-hlavne" type="button">Odomknúť</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

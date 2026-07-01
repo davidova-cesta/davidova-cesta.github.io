@@ -231,9 +231,12 @@ body {
 }
 
 /* =========================================================================
-   Modál na zadanie hesla — neutrálny, čitateľný na projektore (text v cqw).
+   Pergameny (obr.3 CLUE + obr.4 HESLO) — spoločný obal + pergamen s pozadím.
+   Neutrálne (žiadny názov lokácie), čitateľné na projektore (text v cqw).
    ========================================================================= */
-.modal {
+
+/* Tmavý prekryv nad mapou, ktorý pergamen centruje. z-index nad zastávkami/menu. */
+.pergamen-obal {
   position: absolute;
   inset: 0;
   z-index: 30;
@@ -241,29 +244,109 @@ body {
   place-items: center;
   background: rgba(0, 0, 0, 0.6);
 }
-.modal-panel {
-  width: 62%;
-  box-sizing: border-box;
-  padding: 4% 5%;
-  background: #1b1206;
-  border: 2px solid rgba(214, 173, 95, 0.8);
-  border-radius: 16px;
-  text-align: center;
-  color: #f3e6c4;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+
+/*
+  Pergamen: pregamen.png je zvitok NA VÝŠKU (1024×1536 = pomer 2:3). Necháme ho
+  vyšší než javisko (116 %), takže vrch aj spodok siahajú k okrajom mapy a písacia
+  plocha je veľká → slová/pole/tlačidlá sa zmestia DOVNÚTRA a nič nevyčnieva.
+  Text je v cqw (% šírky JAVISKA), nie pergamenu — pergamen je užší, preto menšie hodnoty.
+*/
+.pergamen {
+  position: relative;
+  height: 116%;                        /* vyšší než javisko → vrch aj spodok siahajú k okrajom mapy */
+  aspect-ratio: 2 / 3;                 /* podľa reálneho pregamen.png (1024×1536) */
+  color: #2a1a08;                      /* tmavý text na svetlom pergamene (kontrast) */
 }
-.modal-vyzva {
+.pergamen-pozadie {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;                 /* nezdeformovať pečať/okraje zvitku */
+  pointer-events: none;                /* klikať sa dá cez obrázok na obsah/tlačidlá */
+}
+
+/*
+  Písacia plocha zvitku — vnútorný obdĺžnik medzi horným a dolným valčekom
+  (nad zapečenou pečaťou). Všetok obsah (clue slová aj heslo) leží LEN tu, takže
+  nič nespadne na valčeky ani mimo papiera. Rozmery odčítané z pregamen.png.
+*/
+.pergamen-plocha {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  top: 24%;
+  bottom: 40%;                         /* dolná hrana BEZPEČNE nad pečaťou (pečať ~y66 %) */
+}
+
+/* --- Clue slová: voľne rozmiestnené (left/top z DNI[].clue) v písacej ploche --- */
+.clue-slova {
+  position: absolute;
+  inset: 0;
+}
+.clue-slovo {
+  position: absolute;
+  transform: translate(-50%, -50%);    /* cx/cy = STRED slova (v rámci plochy) */
+  font-size: 2.1cqw;                   /* menšie — pergamen je užší, slová sa zmestia */
+  font-weight: 700;
+  color: #3a2408;
+  text-shadow: 0 1px 0 rgba(255, 250, 235, 0.6);
+  white-space: nowrap;
+}
+
+/*
+  Ďalej — na spodnom okraji písacej plochy (plocha končí na 60 % pergamenu, pečať
+  je na 66 %), takže tlačidlo je vždy NAD pečaťou. Clue slová majú cy najviac ~80 %
+  plochy, čo je nad týmto tlačidlom → neprekrývajú sa.
+*/
+.pergamen-akcia {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+
+/* --- Heslo pergamen: obsah (výzva + pole + správa + tlačidlá) v písacej ploche --- */
+.pergamen-obsah {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.pergamen-vyzva {
   display: block;
-  font-size: 3.6cqw;             /* ~ 60px pri plnom javisku → veľký, čitateľný */
-  margin-bottom: 3%;
+  font-size: 2.2cqw;
+  line-height: 1.25;
+  margin-bottom: 6%;
+  color: #3a2408;
+}
+
+/*
+  Odomknutie (obr.6): po správnom hesle app.js vymení pozadie heslo pergamenu za
+  ODOMKNUTIE.png (celý pergamen s odopnutým zlatým zámkom a žiarou) a skryje obsah.
+  Žiadne prekrývanie pečate — zámok je súčasťou obrázka, nič netreba pozicionovať.
+*/
+
+/* Nesprávne heslo (obr.5): krátky náraz do strán, potom pokoj. */
+.pergamen.trasie {
+  animation: trasenie 0.5s ease;
+}
+@keyframes trasenie {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-2.5%); }
+  40%      { transform: translateX(2.5%); }
+  60%      { transform: translateX(-1.5%); }
+  80%      { transform: translateX(1.5%); }
 }
 .pole-heslo {
   width: 100%;
   box-sizing: border-box;
   font-family: inherit;
-  font-size: 3.2cqw;
+  font-size: 2.6cqw;
   text-align: center;
-  padding: 0.5em 0.6em;
+  padding: 0.4em 0.5em;
   border: 2px solid rgba(214, 173, 95, 0.6);
   border-radius: 10px;
   background: #2a1d0c;
@@ -277,22 +360,23 @@ body {
   min-height: 1.4em;
   margin: 3% 0 0;
   font-size: 2.2cqw;
-  color: #e8a06a;                /* jemná, nenápadná — nekričí na deti */
+  color: #8a3b12;                /* tmavá tehlová — čitateľná na svetlom pergamene, nekričí */
 }
 .modal-tlacidla {
   display: flex;
+  flex-wrap: wrap;                /* poistka: ak sú tlačidlá na užšom pergamene tesné, zalomia sa */
   gap: 4%;
   justify-content: center;
-  margin-top: 4%;
+  margin-top: 5%;
 }
 .tlacidlo {
   font-family: inherit;
-  font-size: 2.4cqw;
-  padding: 0.6em 1.4em;
-  border: 2px solid rgba(214, 173, 95, 0.6);
+  font-size: 2cqw;
+  padding: 0.5em 1.1em;
+  border: 2px solid rgba(120, 80, 30, 0.8);
   border-radius: 10px;
-  background: transparent;
-  color: #f3e6c4;
+  background: rgba(255, 250, 235, 0.55);
+  color: #3a2408;                /* tmavý text — čitateľný na svetlom pergamene */
   cursor: pointer;
   transition: filter .15s ease;
 }

@@ -20,8 +20,9 @@ a store — detail lives in STATUS.md and session notes. One line per session in
 ## Last session
 _Newest first. ONE line per session: outcome headline + (resume: next action) if paused._
 
+- **S4 (2026-07-01)** — Fáza 3 (pergameny + obsah 5 dní) hotová a otestovaná v prehliadači:
+  2-krokový tok clue→heslo, odomknutie výmenou pozadia za `ODOMKNUTIE.png`, D1 heslo/clue potvrdené.
+  Cold review čistý (2 nálezy doriešené) (resume: Fáza 4 — animácie).
 - **S3 (2026-07-01)** — Fáza 1 (kostra INTRO+MAPA) + Fáza 2 (stav + `localStorage` + odomknutie
-  heslom + reset menu) hotové a otestované v prehliadači. Opravená CSS chyba (`.skryta` prebité
-  `.modal`). Heslo D1 → „Hospodin hľadí na tvoje srdce" (resume: Fáza 3 — pergameny + obsah 5 dní).
-- **S2 (2026-07-01)** — Plánovanie + audit assetov + prechod na slovenčinu; plán v
-  `memory/project_build_plan.md`. App kód zatiaľ nie (resume: Fáza 1 — kostra INTRO+MAPA).
+  heslom + reset menu) hotové a otestované. Opravená CSS chyba (`.skryta` prebité `.modal`).
+  Heslo D1 → „Hospodin hľadí na tvoje srdce" (resume: Fáza 3 — pergameny + obsah 5 dní).

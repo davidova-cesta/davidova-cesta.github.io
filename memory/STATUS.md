@@ -4,6 +4,14 @@ one Read call ingests it (move old detail to session notes when it grows)._
 
 ## Recent sessions (rolling window)
 
+- **S4 (2026-07-01)** — **Fáza 3 (pergameny + obsah 5 dní).** Odomknutie prestavané z 1 modálu na
+  2-krokový pergamenový tok: klik → **CLUE pergamen** (voľne rozmiestnené clue slová dňa, ĎALEJ) →
+  **HESLO pergamen** (pole + Odomknúť) → zhoda = **výmena pozadia za `ODOMKNUTIE.png`** (odopnutý
+  zámok, ~1,8 s) → zavrie + odhalí symbol; omyl = shake + neutrálny text (FR-007 presné znenie).
+  Obsah D2–D5 z BRS; **D1 heslo/clue** = potvrdená odchýlka od BRS (Jakub): „Hospodin hľadí na tvoje
+  srdce", clue HOSPODIN/HĽADÍ/NA/TVOJE/SRDCE. Pergamen = zvitok `pregamen.png` na výšku (2:3). Cold
+  review: 0 FOUND, 2 FOUND-UNCERTAIN → oba doriešené (guard `den.clue||[]`; kontrakt clue do plánu).
+  Otestované v prehliadači (Jakub): tok OK.
 - **S3 (2026-07-01)** — **Fáza 1 (kostra INTRO+MAPA)** + **Fáza 2 (stavový model + `localStorage`
   + odomknutie heslom + burger menu s resetom)**. Cold review oboch fáz (0 reálnych defektov v
   review). **Oprava reálnej chyby:** `.skryta` bola prebitá neskorším `.modal{display:grid}` →
@@ -16,16 +24,10 @@ one Read call ingests it (move old detail to session notes when it grows)._
   truhlica + TOTEM (obr.12) + SIFRA (obr.13) sedia; „LOCK_*" nepoužiť (odhaľujú symbol → BR-003);
   mapa = **prázdna `MAPA.jfif`** (postupné odhaľovanie). Prepnuté na **slovenčinu** (global aj
   projektový CLAUDE.md). **Zmazaný** zastaraný anglický BRS + opravené odkazy. App kód zatiaľ nie.
-- **S1 (2026-07-01)** — Installed the agentic starter kit as a **lean adapted spine**
-  (global `~/.claude/CLAUDE.md`; project CLAUDE.md; memory MEMORY/INDEX/STATUS + 12
-  feedback seeds; tasks ACTIVE/BACKLOG/PARKED; `newsession`/`endsession`/`prever`/
-  `deepreview` skills; adapted `.claude/settings.json`; `.gitignore`). Skipped the
-  Python syntax hook + pre-commit guard scripts + audit/tasktodo/innovate/explain
-  (wrong stack / solo / very simple app — see CLAUDE.md "tooling scope"). Set up git
-  and a **public GitHub repo** (github.com/jakubonovo-ai/app-davidova-cesta) with
-  **GitHub Pages** on `main` → https://jakubonovo-ai.github.io/app-davidova-cesta/ .
-  The BRS `.docx` files are **git-ignored (local-only)** because the repo is public.
-  **No app code written yet** — only a placeholder index.html.
+- **S1 (2026-07-01)** — Agentic starter kit (lean adapted spine) + git + **public GitHub repo**
+  (github.com/jakubonovo-ai/app-davidova-cesta) + **GitHub Pages** na `main` →
+  https://jakubonovo-ai.github.io/app-davidova-cesta/ . BRS `.docx` **git-ignored** (repo je public).
+  _(Detaily S1 v git histórii commitu dd287de.)_
 
 ## Phase / milestone status
 
@@ -34,7 +36,8 @@ one Read call ingests it (move old detail to session notes when it grows)._
 - ✅ Fáza 0 — audit assetov (obrázky overené voči BRS)
 - ✅ Fáza 1 — kostra (INTRO + MAPA, 5 zastávok, 3 stavy)
 - ✅ Fáza 2 — stavový model + `localStorage` + odomknutie heslom + reset (menu)
-- ⬜ Fáza 3 — pergameny (clue + heslo + nesprávne) + obsah 5 dní — NEXT
+- ✅ Fáza 3 — pergameny (clue + heslo + nesprávne) + obsah 5 dní (S4)
+- ⬜ Fáza 4 — animácie (odomknutie rozšíriť + symbol + návrat + zajtra) — NEXT
 - ⬜ Offline verification (open index.html with no internet)
 - ⬜ Camp-ready hand-off to the leader
 
@@ -59,10 +62,11 @@ one Read call ingests it (move old detail to session notes when it grows)._
   Font: štýl z `INTRO.png` (Janka, S2) — nájdem voľný ekvivalent so SK diakritikou.
 - Verejný repo = heslá budú viditeľné → nechať public alebo dať private?
 - Mapa rozhodnutá: **prázdna `MAPA.jfif`** + postupné odhaľovanie (nie popísaná „ChatGPT" mapa).
-- **Heslo D1** „Hospodin hľadí na tvoje srdce" — **odsúhlasené Jankou (S3, 2026-07-01).** Zmena je
-  v `app.js` + `project_build_plan.md`; `BRS_fixed.docx` má ešte staré heslo (appka je autoritatívna).
-  **Otvorené:** nové clue slová pre D1 (Fáza 3), staré „BOH, VIDÍ, TVOJE, SRDCE" už nesedia.
-- **Pozície zastávok / veľkosť textu** — zatiaľ orientačné (cqw), doladiť v prehliadači keď bude čas.
+- **Heslo D1** „Hospodin hľadí na tvoje srdce" + clue HOSPODIN/HĽADÍ/NA/TVOJE/SRDCE —
+  **odsúhlasené Jakubom, v appke (S4).** `BRS_fixed.docx` má ešte staré „BOH VIDÍ TVOJE SRDCE"
+  (appka je autoritatívna). **Otvorené:** raz zosúladiť BRS s appkou (drift spec↔kód).
+- **Pozície zastávok / clue slov / veľkosti textu** — orientačné (cqw / % plochy), doladiť
+  v prehliadači; clue `cx/cy` sú % písacej plochy pergamenu (kontrakt v `project_build_plan.md`).
 
 ## Critical rules (not derivable from code)
 - **Never reveal locked/future content** (spoilers) — a hard BRS business rule.

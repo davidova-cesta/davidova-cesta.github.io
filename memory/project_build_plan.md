@@ -28,13 +28,21 @@ postupne (1/deň), stav v `localStorage`, musí bežať offline. Simplicita, spo
 ## Obsah 5 dní (BRS sekcia 7)
 | Deň | Lokácia | Heslo | Clue na pergamene | Číslica |
 |---|---|---|---|---|
-| D1 | PASTIER | `Hospodin hľadí na tvoje srdce` | ⚠️ nové clue slová treba (staré: BOH, VIDÍ, TVOJE, SRDCE) | 1 |
-| D2 | PRAK | `ODVAHA` | O,D,V,A,H,A | 3 |
+| D1 | PASTIER | `Hospodin hľadí na tvoje srdce` | HOSPODIN, HĽADÍ, NA, TVOJE, SRDCE (odchýlka od BRS, Jakub S3) | 1 |
+| D2 | PRAK | `ODVAHA` | O,D,V,A,H,A (písmená; dve A) | 3 |
 | D3 | JONATÁN | `PRIATEĽ MILUJE V KAŽDOM ČASE` | V, MILUJE, KAŽDOM, PRIATEĽ, ČASE | 1 |
 | D4 | JASKYŇA | `JASKYŇA` | netopier, stalagmit, tma, zima, ozvena | 7 |
 | D5 | JERUZALEM | `BOH MA VIEDOL CELÚ CESTU` | MA, CELÚ, VIEDOL, BOH, CESTU | 7 |
 
 Kód truhlice: **13177** (zoradené D1→D5: ovca 1, prak 3, luk 1, jaskyňa 7, koruna 7).
+
+## Kontrakt clue configu (Fáza 3 — pre neskoršie fázy)
+Každý deň v `DNI` (app.js) má pole `clue: [{ text, cx, cy }, …]`. **`cx`/`cy` sú % PÍSACEJ PLOCHY
+pergamenu** (`.pergamen-plocha`, nie javiska ani celého pergamenu); (0,0)=ľavý-horný roh plochy.
+Pozície sú NAPEVNO (FR-017 voľné rozmiestnenie, žiadny `Math.random` → offline+opakovateľné).
+`vykresliClue` toleruje deň bez `clue` (fallback `[]`) — budúci špeciál (napr. D5 obr.13) nespadne.
+Odomknutie: `skusOdomknut` uloží stav PRED animáciou (EC-003), potom vymení pozadie heslo
+pergamenu za `ODOMKNUTIE.png` (obr.6), po `TRVANIE_ODOMKNUTIA_MS` zavrie a prekreslí mapu.
 
 ## 15 obrazoviek (BRS sekcia 8)
 1 INTRO · 2 MAPA · 3 CLUE PERGAMEN · 4 HESLO PERGAMEN · 5 NESPRÁVNE · 6 ODOMKNUTIE ·
@@ -78,8 +86,9 @@ Kód truhlice: **13177** (zoradené D1→D5: ovca 1, prak 3, luk 1, jaskyňa 7, 
 - **Fáza 1 — kostra:** INTRO (klikacia zóna ZAČAŤ) + MAPA s 5 pozíciami; vizuál stavov
   (hmla+zámok / aktívny marker / dokončený symbol) bez logiky hesla.
 - **Fáza 2 — stav:** stavový model + localStorage + 1 odomknutie (klik → pergamen → heslo → OK/zle).
-- **Fáza 3 — pergameny:** obr.3 clue + obr.4 heslo + obr.5 nesprávne; obsah 5 dní.
-- **Fáza 4 — animácie:** obr.6 odomknutie + obr.7 symbol + obr.8 návrat + obr.9 zajtra.
+- **Fáza 3 — pergameny ✅ (S4):** obr.3 clue + obr.4 heslo + obr.5 nesprávne; obsah 5 dní.
+  Odomknutie zatiaľ = výmena pozadia za `ODOMKNUTIE.png` (jednoduchá prvá verzia obr.6).
+- **Fáza 4 — animácie:** obr.6 odomknutie (rozšíriť) + obr.7 symbol + obr.8 návrat + obr.9 zajtra.
 - **Fáza 5 — D5 špeciál:** obr.10–15 (finálna mapa, záverečná, TOTEM „?", SIFRA, 13177, TRUHLICA).
 - **Fáza 6 — zvuk:** mp3 + tichý fallback.
 - **Fáza 7 — polish:** hmla/žiara cesty, ambient, projektor, edge cases EC-001…010.
