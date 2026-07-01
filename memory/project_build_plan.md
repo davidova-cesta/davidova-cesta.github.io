@@ -28,7 +28,7 @@ postupne (1/deň), stav v `localStorage`, musí bežať offline. Simplicita, spo
 ## Obsah 5 dní (BRS sekcia 7)
 | Deň | Lokácia | Heslo | Clue na pergamene | Číslica |
 |---|---|---|---|---|
-| D1 | PASTIER | `BOH VIDÍ TVOJE SRDCE` | BOH, VIDÍ, TVOJE, SRDCE | 1 |
+| D1 | PASTIER | `Hospodin hľadí na tvoje srdce` | ⚠️ nové clue slová treba (staré: BOH, VIDÍ, TVOJE, SRDCE) | 1 |
 | D2 | PRAK | `ODVAHA` | O,D,V,A,H,A | 3 |
 | D3 | JONATÁN | `PRIATEĽ MILUJE V KAŽDOM ČASE` | V, MILUJE, KAŽDOM, PRIATEĽ, ČASE | 1 |
 | D4 | JASKYŇA | `JASKYŇA` | netopier, stalagmit, tma, zima, ozvena | 7 |

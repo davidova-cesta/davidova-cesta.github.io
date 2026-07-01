@@ -121,6 +121,17 @@ wall at a kids' camp; no server, no build, no framework, no network; progress in
     `13177`, the day↔symbol↔digit mapping, and stop positions must each have ONE home; when a
     value changes, grep every occurrence and update together.
 
+### CSS / rendering
+
+15. **Hide-utility overridden by a component's `display` (cascade source-order)** — a shared
+    `.skryta`/`.hidden` utility toggled by JS can be silently beaten by a later rule that sets
+    `display` on the same element (e.g. `.modal { display: grid }` declared AFTER `.skryta`),
+    because equal-specificity ties are won by source order. Symptom: an element that should be
+    hidden shows anyway (and can cover the whole stage, blocking clicks). Check: does any element
+    carry BOTH `.skryta` and a component class that sets `display`? The utility must win
+    (`!important` or higher specificity). Regression from Fáza 2. Verify by toggling, not by
+    reading the class alone. This is a CSS-cascade bug the DOM/logic review will not catch.
+
 ---
 
 ## Code-shape guidance — how a senior dev writes this

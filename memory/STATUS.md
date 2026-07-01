@@ -4,6 +4,13 @@ one Read call ingests it (move old detail to session notes when it grows)._
 
 ## Recent sessions (rolling window)
 
+- **S3 (2026-07-01)** — **Fáza 1 (kostra INTRO+MAPA)** + **Fáza 2 (stavový model + `localStorage`
+  + odomknutie heslom + burger menu s resetom)**. Cold review oboch fáz (0 reálnych defektov v
+  review). **Oprava reálnej chyby:** `.skryta` bola prebitá neskorším `.modal{display:grid}` →
+  okno na heslo sa zobrazovalo cez celú mapu a blokovalo kliky → `display:none !important`
+  (pridaná deepreview kategória 15 = CSS cascade). **Heslo D1 zmenené** na „Hospodin hľadí na
+  tvoje srdce" (BRS uvádza staré → over s Jankou; D1 clue slová treba nové – Fáza 3). Otestované
+  v prehliadači: odomknutie D1/D2 + reset OK.
 - **S2 (2026-07-01)** — Plánovanie + **Fáza 0 audit assetov**. Prečítaný celý `BRS_fixed.docx`;
   plán uložený do `memory/project_build_plan.md`. Obrázky overené na vlastné oči: symboly D1–D5 +
   truhlica + TOTEM (obr.12) + SIFRA (obr.13) sedia; „LOCK_*" nepoužiť (odhaľujú symbol → BR-003);
@@ -25,7 +32,9 @@ one Read call ingests it (move old detail to session notes when it grows)._
 - ✅ Repo + GitHub Pages set up (placeholder page only)
 - ✅ Planning session + build plan (`memory/project_build_plan.md`)
 - ✅ Fáza 0 — audit assetov (obrázky overené voči BRS)
-- ⬜ App build — Fáza 1 (kostra: INTRO + MAPA) — NEXT
+- ✅ Fáza 1 — kostra (INTRO + MAPA, 5 zastávok, 3 stavy)
+- ✅ Fáza 2 — stavový model + `localStorage` + odomknutie heslom + reset (menu)
+- ⬜ Fáza 3 — pergameny (clue + heslo + nesprávne) + obsah 5 dní — NEXT
 - ⬜ Offline verification (open index.html with no internet)
 - ⬜ Camp-ready hand-off to the leader
 
@@ -50,6 +59,9 @@ one Read call ingests it (move old detail to session notes when it grows)._
   Font: štýl z `INTRO.png` (Janka, S2) — nájdem voľný ekvivalent so SK diakritikou.
 - Verejný repo = heslá budú viditeľné → nechať public alebo dať private?
 - Mapa rozhodnutá: **prázdna `MAPA.jfif`** + postupné odhaľovanie (nie popísaná „ChatGPT" mapa).
+- **Heslo D1 zmenené** (S3) na „Hospodin hľadí na tvoje srdce" — **BRS + Janka:** over súhlas a nové
+  clue slová pre D1 (Fáza 3). Zmena je zatiaľ len v `app.js` + `project_build_plan.md`, nie v BRS.
+- **Pozície zastávok / veľkosť textu** — zatiaľ orientačné (cqw), doladiť v prehliadači keď bude čas.
 
 ## Critical rules (not derivable from code)
 - **Never reveal locked/future content** (spoilers) — a hard BRS business rule.

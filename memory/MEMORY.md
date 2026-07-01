@@ -20,7 +20,8 @@ a store — detail lives in STATUS.md and session notes. One line per session in
 ## Last session
 _Newest first. ONE line per session: outcome headline + (resume: next action) if paused._
 
+- **S3 (2026-07-01)** — Fáza 1 (kostra INTRO+MAPA) + Fáza 2 (stav + `localStorage` + odomknutie
+  heslom + reset menu) hotové a otestované v prehliadači. Opravená CSS chyba (`.skryta` prebité
+  `.modal`). Heslo D1 → „Hospodin hľadí na tvoje srdce" (resume: Fáza 3 — pergameny + obsah 5 dní).
 - **S2 (2026-07-01)** — Plánovanie + audit assetov + prechod na slovenčinu; plán v
   `memory/project_build_plan.md`. App kód zatiaľ nie (resume: Fáza 1 — kostra INTRO+MAPA).
-- **S1 (2026-07-01)** — Set up agentic starter kit (lean adapted spine) + public
-  GitHub repo + Pages. App not built yet (resume: planning session).

@@ -25,6 +25,7 @@ body {
   overflow: hidden;
   background: #000;
   user-select: none;
+  container-type: inline-size;                /* 1cqw = 1 % šírky javiska → text škáluje s projekciou */
 }
 
 /* --- Obrazovky: prekrývajú sa cez celé javisko; prepína ich app.js triedou .skryta --- */
@@ -33,7 +34,9 @@ body {
   inset: 0;
 }
 .skryta {
-  display: none;
+  /* Utility na skrytie. !important, aby zvíťazilo nad display komponentu
+     (napr. .modal { display: grid }) bez ohľadu na poradie v súbore. */
+  display: none !important;
 }
 
 /* Pozadie obrazovky (INTRO / MAPA). Obrázok je presne 16:9 → fill neskresľuje. */
@@ -98,7 +101,7 @@ body {
 .zastavka {
   position: absolute;
   transform: translate(-50%, -50%);   /* left/top = STRED bodu */
-  width: 8%;
+  width: 15%;                          /* zväčšené oproti pôvodným 8 % (S3) */
   aspect-ratio: 1 / 1;                 /* kruh nezávisle od pomeru javiska */
   border-radius: 50%;
   display: grid;
@@ -123,6 +126,9 @@ body {
 .stav-aktivna {
   background: rgba(255, 244, 214, 0.10);
   border: 3px solid rgba(214, 173, 95, 0.9);
+}
+.zastavka.klikatelna {
+  cursor: pointer;
 }
 .stav-aktivna .marker {
   width: 34%;
@@ -164,4 +170,137 @@ body {
 .stav-uzamknuta .zamok svg {
   width: 100%;
   height: 100%;
+}
+
+/* =========================================================================
+   Burger menu operátora — nenápadné v pravom hornom rohu.
+   Obsahuje zatiaľ len reset postupu (za potvrdením v app.js).
+   ========================================================================= */
+.menu {
+  position: absolute;
+  top: 2.5%;
+  right: 1.5%;
+  z-index: 20;
+}
+.menu-tlacidlo {
+  display: block;
+  width: 3.4cqw;
+  min-width: 34px;
+  aspect-ratio: 1 / 1;
+  padding: 0.6cqw;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(20, 14, 6, 0.45);
+  color: rgba(243, 230, 196, 0.85);
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+.menu-tlacidlo:hover {
+  background: rgba(20, 14, 6, 0.75);
+}
+.menu-tlacidlo svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.menu-tlacidlo svg rect {
+  fill: currentColor;
+}
+.menu-obsah {
+  margin-top: 0.6cqw;
+  background: rgba(20, 14, 6, 0.96);
+  border: 1px solid rgba(214, 173, 95, 0.5);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.menu-polozka {
+  display: block;
+  width: 100%;
+  padding: 1cqw 1.6cqw;
+  border: 0;
+  background: transparent;
+  color: #f3e6c4;
+  font-family: inherit;
+  font-size: 2cqw;
+  white-space: nowrap;
+  text-align: left;
+  cursor: pointer;
+}
+.menu-polozka:hover {
+  background: rgba(214, 173, 95, 0.2);
+}
+
+/* =========================================================================
+   Modál na zadanie hesla — neutrálny, čitateľný na projektore (text v cqw).
+   ========================================================================= */
+.modal {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+.modal-panel {
+  width: 62%;
+  box-sizing: border-box;
+  padding: 4% 5%;
+  background: #1b1206;
+  border: 2px solid rgba(214, 173, 95, 0.8);
+  border-radius: 16px;
+  text-align: center;
+  color: #f3e6c4;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+}
+.modal-vyzva {
+  display: block;
+  font-size: 3.6cqw;             /* ~ 60px pri plnom javisku → veľký, čitateľný */
+  margin-bottom: 3%;
+}
+.pole-heslo {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 3.2cqw;
+  text-align: center;
+  padding: 0.5em 0.6em;
+  border: 2px solid rgba(214, 173, 95, 0.6);
+  border-radius: 10px;
+  background: #2a1d0c;
+  color: #f3e6c4;
+}
+.pole-heslo:focus {
+  outline: 3px solid rgba(214, 173, 95, 0.9);
+  outline-offset: 2px;
+}
+.sprava-heslo {
+  min-height: 1.4em;
+  margin: 3% 0 0;
+  font-size: 2.2cqw;
+  color: #e8a06a;                /* jemná, nenápadná — nekričí na deti */
+}
+.modal-tlacidla {
+  display: flex;
+  gap: 4%;
+  justify-content: center;
+  margin-top: 4%;
+}
+.tlacidlo {
+  font-family: inherit;
+  font-size: 2.4cqw;
+  padding: 0.6em 1.4em;
+  border: 2px solid rgba(214, 173, 95, 0.6);
+  border-radius: 10px;
+  background: transparent;
+  color: #f3e6c4;
+  cursor: pointer;
+  transition: filter .15s ease;
+}
+.tlacidlo-hlavne {
+  background: rgba(214, 173, 95, 0.92);
+  color: #1b1206;
+  border-color: rgba(214, 173, 95, 0.92);
+}
+.tlacidlo:hover {
+  filter: brightness(1.12);
 }
