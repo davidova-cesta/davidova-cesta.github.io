@@ -54,17 +54,17 @@ pergamenu za `ODOMKNUTIE.png` (obr.6), po `TRVANIE_ODOMKNUTIA_MS` zavrie a prekr
 |---|---|---|
 | MAPA.jfif | základ mapy (obr.2) | ✅ prázdna krajina ~16:9; zastávky doplníme my |
 | INTRO.png | obr.1 | ✅ titulka + ZAČAŤ zapečené (titul „Dobrodružstvo s Dávidom" ≠ BRS); prekryť klikacou zónou |
-| PASTIER.jfif | symbol D1 | ✅ pastier+ovce+strom, priehľadné |
-| PRAK.png | symbol D2 | ✅ prak+kamene; čierne pozadie |
-| JONATAN.jfif | symbol D3 | ✅ luk+túl+strom, bez terča; bez plášťa |
-| jask.png | symbol D4 | ✅ jaskyňa+fakľa, priehľadné |
-| JERUZALEM.jfif | symbol D5 | ✅ opevnené mesto; bez zreteľnej koruny |
+| PASTIER.png | symbol D1 | ✅ pastier+ovce+strom; priehľadné (S5: .jfif zmazaný, biele/šachovnicové pozadie odstránené skriptom → RGBA) |
+| PRAK.png | symbol D2 | ✅ prak+kamene; už mal alfu (RGBA), OK |
+| JONATAN.png | symbol D3 | ✅ luk+túl+strom; priehľadné (S5: .jfif zmazaný, pozadie odstránené → RGBA) |
+| jask.png | symbol D4 | ✅ jaskyňa+fakľa; už mal alfu (RGBA), OK |
+| JERUZALEM.png | symbol D5 | ✅ opevnené mesto + zlatá kupola; priehľadné (S5: .jfif zmazaný, pozadie odstránené → RGBA) |
 | TRUHLICA.jfif | obr.15 | ✅ otvorená truhlica |
 | TOTEM.jfif | obr.12 (mystery circle) | ✅ podstavec s „?" + fakle |
 | SIFRA.jfif | obr.13 (symboly+číslice) | ✅ 5 medailónov s číslicami → 13177 |
 | pregamen.png | pozadie pergamenov (obr.3,4) | ⚠️ čierne pozadie; má „D" pečať (celú) |
 | pecat.png | animácia prasknutia | ⚠️ len rozbitá polovica (celá pečať je na pregamene) |
-| svetlo.png | svetelný efekt (obr.6) | ✅ zlatá žiara, priehľadné |
+| svetlo.png | svetelný efekt (obr.6) | ✅ zlatá žiara/hviezda; ⚠️ ČIERNE pozadie (nie priehľadné) → použiť na čiernom podklade (overené S5) |
 | ODOMKNUTIE.png | obr.6 | ✅ otvorený zámok + svetlo |
 | LOCK_* (5×) | — | ❌ NEPOUŽIŤ — odhaľujú symbol (proti BR-003) |
 | 3× „ChatGPT Image…" | podklady | ⚠️ mapa=referencia; dok+storyboard = mimo app_images |

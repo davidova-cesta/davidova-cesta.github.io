@@ -27,7 +27,7 @@ var STAV = {
   BRS uvádza „BOH VIDÍ TVOJE SRDCE" — appka používa „Hospodin hľadí na tvoje srdce".
 */
 var DNI = [
-  { id: "D1", nazov: "Pastier",   symbol: "app_images/PASTIER.jfif",  heslo: "Hospodin hľadí na tvoje srdce", x: 11, y: 70,
+  { id: "D1", nazov: "Pastier",   symbol: "app_images/PASTIER.png",  heslo: "Hospodin hľadí na tvoje srdce", x: 11, y: 70,
     clue: [
       { text: "HOSPODIN", cx: 34, cy: 16 },
       { text: "TVOJE",    cx: 70, cy: 40 },
@@ -44,7 +44,7 @@ var DNI = [
       { text: "D", cx: 78, cy: 58 },
       { text: "A", cx: 40, cy: 74 }
     ] },
-  { id: "D3", nazov: "Jonatán",   symbol: "app_images/JONATAN.jfif",  heslo: "PRIATEĽ MILUJE V KAŽDOM ČASE", x: 52, y: 30,
+  { id: "D3", nazov: "Jonatán",   symbol: "app_images/JONATAN.png",  heslo: "PRIATEĽ MILUJE V KAŽDOM ČASE", x: 52, y: 30,
     clue: [
       { text: "MILUJE",  cx: 30, cy: 18 },
       { text: "PRIATEĽ", cx: 62, cy: 40 },
@@ -60,7 +60,7 @@ var DNI = [
       { text: "tma",       cx: 24, cy: 70 },
       { text: "zima",      cx: 72, cy: 74 }
     ] },
-  { id: "D5", nazov: "Jeruzalem", symbol: "app_images/JERUZALEM.jfif", heslo: "BOH MA VIEDOL CELÚ CESTU", x: 88, y: 22,
+  { id: "D5", nazov: "Jeruzalem", symbol: "app_images/JERUZALEM.png", heslo: "BOH MA VIEDOL CELÚ CESTU", x: 88, y: 22,
     clue: [
       { text: "VIEDOL", cx: 32, cy: 18 },
       { text: "BOH",    cx: 68, cy: 30 },
@@ -291,11 +291,14 @@ function otvorHeslo() {
 
 /**
  * Zavrie oba pergameny a vráti heslo pergamen do východzieho vzhľadu
- * (zapečatená pečať, žiadny shake). Volá sa pri Zrušiť/Escape/resete aj po
- * dokončení animácie odomknutia — vždy necháva pergamen pripravený na ďalší deň.
+ * (zapečatená pečať, žiadny shake, symbol skrytý). Volá sa pri Zrušiť/Escape/
+ * resete aj po dokončení odomknutia — vždy necháva pergamen pripravený na ďalší
+ * deň. Zruší aj prípadné bežiace časovače odomknutia (žiadny „duch" po zavretí).
  */
 function zavriHeslo() {
   aktivnyIndex = null;
+  zrusOdomkCasovace();
+  sekvenciaHotovo = null;
   resetOdomknutie();
   document.getElementById("heslo-pergamen-panel").classList.remove("trasie");
   skryPergameny();
@@ -310,26 +313,83 @@ function zatrasPergamenom() {
   panel.classList.add("trasie");
 }
 
-/* Cesty k pozadiam heslo pergamenu (single-source) + ako dlho držať odomknutie. */
+/* Cesty k pozadiam heslo pergamenu (single-source) + časovanie krokov odomknutia. */
 var POZADIE_ZAPECATENE = "app_images/pregamen.png";
 var POZADIE_ODOMKNUTE = "app_images/ODOMKNUTIE.png";
-var TRVANIE_ODOMKNUTIA_MS = 1800;
+var TRVANIE_ZAMKU_MS = 1500;          // ako dlho vidno odopnutý zámok (obr.6) pred symbolom
+var TRVANIE_SYMBOLU_MS = 4000;        // ako dlho vidno symbol + názov (obr.7) pred návratom na mapu
 
-/**
- * Odomknutie na heslo pergamene (obr.6): schová obsah (pole/tlačidlá) a vymení
- * pozadie za pergamen s odopnutým zámkom, chvíľu ho podrží, potom zavolá hotovo().
- * @param {Function} hotovo - callback po zobrazení odomknutia.
- */
-function ukazOdomknutie(hotovo) {
-  document.getElementById("heslo-obsah").classList.add("skryta");
-  document.getElementById("heslo-pozadie").src = POZADIE_ODOMKNUTE;
-  window.setTimeout(hotovo, TRVANIE_ODOMKNUTIA_MS);
+/*
+  Bežiace časovače odomknutia a callback po jeho dokončení. Držíme ich, aby klik/
+  Escape (preskočenie) aj reset vedeli zrušiť naplánované kroky a dobehnúť/prerušiť
+  bez duplikácie. sekvenciaHotovo != null znamená „odomknutie práve beží".
+*/
+var odomkCasovace = [];
+var sekvenciaHotovo = null;
+
+/** Zruší všetky naplánované kroky odomknutia (pri preskočení alebo resete). */
+function zrusOdomkCasovace() {
+  for (var i = 0; i < odomkCasovace.length; i++) {
+    window.clearTimeout(odomkCasovace[i]);
+  }
+  odomkCasovace = [];
 }
 
-/** Vráti heslo pergamen do východzieho vzhľadu (zapečatený, obsah viditeľný). */
+/**
+ * Odomknutie na heslo pergamene v dvoch krokoch:
+ *   obr.6 — schová zadávanie, vymení pozadie za ODOMKNUTIE.png (odopnutý zámok);
+ *   obr.7 — po TRVANIE_ZAMKU_MS ukáže symbol dňa + jeho názov na pergamene;
+ *   po TRVANIE_SYMBOLU_MS zavolá hotovo() (zavrie pergamen, prekreslí mapu).
+ * Symbol/názov sa do DOM vkladá AŽ tu (po uložení stavu) — žiadny spoiler (BR-003).
+ * @param {Object} den - konfigurácia práve odomknutého dňa.
+ * @param {Function} hotovo - callback po dobehnutí (prekreslí mapu, zavrie pergamen).
+ */
+function ukazOdomknutie(den, hotovo) {
+  sekvenciaHotovo = hotovo;
+  document.getElementById("heslo-obsah").classList.add("skryta");
+  document.getElementById("heslo-pozadie").src = POZADIE_ODOMKNUTE;   // obr.6 — odopnutý zámok
+
+  odomkCasovace.push(window.setTimeout(function () {
+    // Zámok zmizne: pozadie späť na obyčajný pergamen, aby ostal vidieť len symbol.
+    document.getElementById("heslo-pozadie").src = POZADIE_ZAPECATENE;
+    var obr = document.getElementById("heslo-symbol-obr");
+    obr.src = den.symbol;
+    obr.alt = den.nazov;                 // názov smie byť v DOM až po odomknutí (BR-003)
+    document.getElementById("heslo-symbol-nazov").textContent = den.nazov;
+    var blok = document.getElementById("heslo-symbol");
+    blok.classList.remove("skryta");
+    void blok.offsetWidth;               // reflow → nábeh opacity od 0, nie skokom
+    blok.classList.add("zjav");
+  }, TRVANIE_ZAMKU_MS));
+
+  odomkCasovace.push(window.setTimeout(dokonciOdomknutie, TRVANIE_ZAMKU_MS + TRVANIE_SYMBOLU_MS));
+}
+
+/**
+ * Dobehne (alebo preskočí) odomknutie: zruší časovače a zavolá uložený callback,
+ * ktorý zavrie pergamen a prekreslí mapu. Idempotentná — druhé volanie (klik +
+ * Escape + časovač naraz) po vynulovaní callbacku už nič nespraví.
+ */
+function dokonciOdomknutie() {
+  zrusOdomkCasovace();
+  var hotovo = sekvenciaHotovo;
+  sekvenciaHotovo = null;
+  if (hotovo) hotovo();
+}
+
+/**
+ * Vráti heslo pergamen do východzieho vzhľadu (zapečatený, zadávanie viditeľné,
+ * symbol skrytý a vyčistený). Volá zavriHeslo po dokončení aj reset postupu.
+ * Symbol.src sa vyprázdni, aby ďalší deň neblikol starým obrázkom pred vložením.
+ */
 function resetOdomknutie() {
   document.getElementById("heslo-pozadie").src = POZADIE_ZAPECATENE;
   document.getElementById("heslo-obsah").classList.remove("skryta");
+  var blok = document.getElementById("heslo-symbol");
+  blok.classList.add("skryta");
+  blok.classList.remove("zjav");
+  document.getElementById("heslo-symbol-obr").removeAttribute("src");
+  document.getElementById("heslo-symbol-nazov").textContent = "";
 }
 
 /**
@@ -344,11 +404,12 @@ function skusOdomknut() {
   if (zadane === "") return;
 
   if (zadane === normalizujHeslo(DNI[aktivnyIndex].heslo)) {
+    var den = DNI[aktivnyIndex];
     var stav = nacitajStav();
     stav.dokonceneDni = aktivnyIndex + 1;   // ulož najprv (EC-003), potom odhaľ
     ulozStav(stav);
     aktivnyIndex = null;                     // zamkni ďalšie pokusy počas animácie
-    ukazOdomknutie(function () {
+    ukazOdomknutie(den, function () {
       zavriHeslo();
       vykresliZastavky(stav);
     });
@@ -380,7 +441,7 @@ function zavriMenu() {
 function vynulujPostup() {
   zavriMenu();
   if (!window.confirm("Naozaj vynulovať celý postup? Appka sa vráti na začiatok.")) return;
-  zavriHeslo();                 // ak bol otvorený pergamen, zavri ho (žiadny „duch" po resete)
+  zavriHeslo();                 // zavrie pergamen + zruší bežiace odomknutie (žiadne prekreslenie starým stavom)
   var stav = kopiaStavu(VYCHODZI_STAV);
   ulozStav(stav);
   vykresliZastavky(stav);
@@ -403,15 +464,26 @@ function start() {
   document.getElementById("tlacidlo-odomknut").addEventListener("click", skusOdomknut);
   document.getElementById("tlacidlo-zrusit").addEventListener("click", zavriHeslo);
 
+  // Klik na pergamen počas odomknutia = preskočiť na koniec (kontrola vedúceho).
+  // Ignoruj klik na tlačidlo/pole: klik na „Odomknúť", ktorý sekvenciu SPUSTIL,
+  // by inak bublou hneď preskočil na koniec (a odomknutie by nebolo vidno).
+  document.getElementById("heslo-pergamen").addEventListener("click", function (e) {
+    if (!sekvenciaHotovo) return;
+    if (e.target.closest("button, input")) return;
+    dokonciOdomknutie();
+  });
+
   var pole = document.getElementById("pole-heslo");
   pole.addEventListener("keydown", function (e) {
     if (e.key === "Enter") skusOdomknut();
     else if (e.key === "Escape") zavriHeslo();
   });
 
-  // Escape zavrie aj clue pergamen (nemá pole hesla, tak počúvame globálne).
+  // Globálny Escape: počas odomknutia preskočí, inak zavrie otvorený clue pergamen.
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && aktivnyIndex !== null) zavriHeslo();
+    if (e.key !== "Escape") return;
+    if (sekvenciaHotovo) dokonciOdomknutie();
+    else if (aktivnyIndex !== null) zavriHeslo();
   });
 
   vykresliZastavky(nacitajStav());

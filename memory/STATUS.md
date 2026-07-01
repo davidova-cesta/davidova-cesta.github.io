@@ -4,6 +4,18 @@ one Read call ingests it (move old detail to session notes when it grows)._
 
 ## Recent sessions (rolling window)
 
+- **S5 (2026-07-01)** — **Fáza 4 (odhalenie symbolu po odomknutí).** Po správnom hesle: obr.6
+  pergamen ukáže `ODOMKNUTIE.png` (odopnutý zámok, 1,5 s) → obr.7 zámok zmizne (pozadie späť na
+  `pregamen.png`) + na pergamene sa objaví **symbol dňa + jeho názov** (4 s, jemný fade) → zavrie
+  pergamen + prekreslí mapu s novým symbolom. **Prerušiteľné** klikom na pergamen (okrem tlačidla/
+  pola) alebo Escape = skok na koniec; reset počas animácie ju zruší (`sekvenciaHotovo` + zrušené
+  časovače). Prvý pokus (celoplošný overlay + svetlo.png) **zahodený** — Jakub žiadal jednoduchosť
+  na pergamene; svetlo.png sa nepoužilo (nevhodné). **Menu zdvihnuté nad pergamen** (z-index 40>30)
+  → dostupné aj počas hesla/animácie (Jakub OK). **Symboly D1/D3/D5 prepnuté .jfif→.png**: staré
+  `.jfif` mali biele/šachovnicové pozadie zapečené v JPEG → Jakub zmazal .jfif, ja som skriptom
+  (Pillow, flood-fill+neutrálne pozadie) odstránil pozadie z dodaných PNG → RGBA. D2/D4 už mali alfu.
+  Cold review (22 kat.): 0 FOUND, 2 FOUND-UNCERTAIN (img `onerror` → Fáza 7; reset nad prekryvom =
+  zámer). Otestované v prehliadači (Jakub): tok OK.
 - **S4 (2026-07-01)** — **Fáza 3 (pergameny + obsah 5 dní).** Odomknutie prestavané z 1 modálu na
   2-krokový pergamenový tok: klik → **CLUE pergamen** (voľne rozmiestnené clue slová dňa, ĎALEJ) →
   **HESLO pergamen** (pole + Odomknúť) → zhoda = **výmena pozadia za `ODOMKNUTIE.png`** (odopnutý
@@ -37,7 +49,8 @@ one Read call ingests it (move old detail to session notes when it grows)._
 - ✅ Fáza 1 — kostra (INTRO + MAPA, 5 zastávok, 3 stavy)
 - ✅ Fáza 2 — stavový model + `localStorage` + odomknutie heslom + reset (menu)
 - ✅ Fáza 3 — pergameny (clue + heslo + nesprávne) + obsah 5 dní (S4)
-- ⬜ Fáza 4 — animácie (odomknutie rozšíriť + symbol + návrat + zajtra) — NEXT
+- ✅ Fáza 4 — odhalenie symbolu po odomknutí (zámok → symbol+názov na pergamene, prerušiteľné) (S5)
+- ⬜ Fáza 5 — D5 špeciál (finálna mapa, TOTEM, SIFRA, 13177, truhlica) — NEXT
 - ⬜ Offline verification (open index.html with no internet)
 - ⬜ Camp-ready hand-off to the leader
 
@@ -46,9 +59,11 @@ one Read call ingests it (move old detail to session notes when it grows)._
 - Stack: static HTML/CSS/JS, offline-first, progress in `localStorage`. No server,
   no DB, no network, no secrets.
 - Tests: none yet.
-- Assets present: `app_images/` (mapa, 5 symbolov, TOTEM=obr.12, SIFRA=obr.13, pergamen,
-  pečať, svetlo, truhlica; „LOCK_*" sa NEpoužijú — odhaľujú symbol). BRS: jediný spec
-  `BRS_fixed.docx` (zastaraný anglický zmazaný). Audit: viď `memory/project_build_plan.md`.
+- Assets present: `app_images/` (mapa, 5 symbolov — všetky priehľadné PNG od S5, TOTEM=obr.12,
+  SIFRA=obr.13, pergamen, pečať, svetlo, truhlica; „LOCK_*" sa NEpoužijú — odhaľujú symbol). BRS:
+  jediný spec `BRS_fixed.docx` (zastaraný anglický zmazaný). Audit: viď `memory/project_build_plan.md`.
+  Symboly D1/D3/D5 boli JPEG(.jfif) s bielym pozadím → S5 zmazané, nahradené priehľadnými `.png`
+  (pozadie odstránené skriptom Pillow; zálohy .jfif originálov len v git histórii pred S5).
 - Environment on this machine: Python is `py` (bare `python` is the broken Store
   stub); **Node is NOT installed**; `gh` CLI 2.95.0 installed at
   `C:\Program Files\GitHub CLI\gh.exe`, authed as **jakubonovo-ai**.

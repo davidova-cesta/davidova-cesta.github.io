@@ -180,7 +180,7 @@ body {
   position: absolute;
   top: 2.5%;
   right: 1.5%;
-  z-index: 20;
+  z-index: 40;                        /* nad pergamenovým prekryvom (z-index 30) → menu dostupné aj počas hesla/odomknutia */
 }
 .menu-tlacidlo {
   display: block;
@@ -328,6 +328,37 @@ body {
   ODOMKNUTIE.png (celý pergamen s odopnutým zlatým zámkom a žiarou) a skryje obsah.
   Žiadne prekrývanie pečate — zámok je súčasťou obrázka, nič netreba pozicionovať.
 */
+
+/*
+  Odhalenie symbolu (obr.7): po odopnutom zámku app.js ukáže tento blok — symbol
+  dňa a jeho názov v písacej ploche pergamenu (nad zapečenou pečaťou). Jemný nábeh.
+*/
+.heslo-symbol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+/* Nábeh spustí app.js pridaním .zjav (po vložení symbolu + reflow). */
+.heslo-symbol.zjav {
+  opacity: 1;
+}
+.heslo-symbol-obr {
+  max-width: 100%;
+  max-height: 84%;
+  object-fit: contain;                 /* celá kresba symbolu, žiadny orez */
+  display: block;
+}
+.heslo-symbol-nazov {
+  margin: 4% 0 0;
+  font-size: 3cqw;                     /* veľký názov pod symbolom, čitateľný na projektore */
+  font-weight: 700;
+  color: #3a2408;
+  text-shadow: 0 1px 0 rgba(255, 250, 235, 0.6);
+}
 
 /* Nesprávne heslo (obr.5): krátky náraz do strán, potom pokoj. */
 .pergamen.trasie {

@@ -87,6 +87,16 @@
             </div>
           </div>
         </div>
+        <!--
+          Odhalenie symbolu (obr.7): po odopnutom zámku app.js sem vloží symbol dňa
+          a jeho názov, chvíľu ich podrží, potom zavrie pergamen a prekreslí mapu.
+          Obsah (src/text) sa vkladá AŽ po uložení stavu (BR-003, žiadny spoiler vopred).
+          Skrytý cez .skryta, kým beží zadávanie hesla.
+        -->
+        <div id="heslo-symbol" class="pergamen-plocha heslo-symbol skryta">
+          <img id="heslo-symbol-obr" class="heslo-symbol-obr" alt="" />
+          <p id="heslo-symbol-nazov" class="heslo-symbol-nazov"></p>
+        </div>
       </div>
     </div>
 
