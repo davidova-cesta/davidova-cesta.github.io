@@ -4,6 +4,14 @@ one Read call ingests it (move old detail to session notes when it grows)._
 
 ## Recent sessions (rolling window)
 
+- **S7 (2026-07-02)** — **Príprava assetov pre Fázu 6 (zvuk) — bez kódu.** Preštudovaný Assets Register
+  v BRS (sekcia audio); pre každý z 9 zvukov napísaný AI-generátorový prompt (odporúčaný **ElevenLabs
+  Sound Effects**, hudba ako záloha Suno). **Obsahová zmena (Janka OK):** `seal_crack.mp3` už NIE je
+  prasknutie pečate, ale **zvuk odomknutia vintage zámku** (názov súboru ostáva kvôli kódu). Janka
+  vygenerovala a dodala **všetkých 9 mp3**; ja som ich premenoval z ElevenLabs názvov na cieľové
+  (`ambient/seal_crack/light_reveal/birds/wind/water/leaves/cave/celebration.mp3`) v `audio/`. **Fáza 6
+  tým prestala byť blokovaná produkciou.** Otvorený bod: `ambient.mp3` bol generovaný bez zapnutého
+  Loop-u → pri teste overiť seamless loop, prípadne pregenerovať. Kód appky sa nemenil.
 - **S6 (2026-07-02)** — **Fáza 5 (D5 finálna sekvencia, obr.10–15).** Po odomknutí Jeruzalema (D5) sa
   namiesto štandardného návratu na mapu spustí finále: obr.10 **finálna mapa** (svetelná vlna — dokončené
   zastávky sa postupne rozžiaria D1→D5 cez `--poradie`) → obr.11 **záverečná** (Jeruzalem v zlate + „Dávidova
@@ -75,6 +83,10 @@ one Read call ingests it (move old detail to session notes when it grows)._
 - Stack: static HTML/CSS/JS, offline-first, progress in `localStorage`. No server,
   no DB, no network, no secrets.
 - Tests: none yet.
+- Assets present: `audio/` — **9 zvukových mp3 dodaných (S7)**: `ambient` (harfa, loop), `seal_crack`
+  (odomknutie zámku — ZMENA z prasknutia pečate), `light_reveal` („wow" svetlo), `birds` D1, `wind`,
+  `water` D2, `leaves` D3, `cave` D4, `celebration` D5 finále. Generované cez ElevenLabs Sound Effects.
+  Pozn.: `ambient.mp3` bez seamless-loop nastavenia → overiť pri teste. Ešte NIE sú napojené v kóde (Fáza 6).
 - Assets present: `app_images/` (mapa, 5 symbolov — všetky priehľadné PNG od S5; finále: `TOTEM.png`=obr.12,
   `SIFRA.png`=obr.13, `TRUHLICA.png`=obr.15 — všetky priehľadné PNG od S6; pergamen, pečať, svetlo, ODOMKNUTIE;
   „LOCK_*" sa NEpoužijú — odhaľujú symbol). BRS: jediný spec `BRS_fixed.docx`. Audit: viď `project_build_plan.md`.
@@ -89,7 +101,7 @@ one Read call ingests it (move old detail to session notes when it grows)._
   offline, so plan to also hand the leader the files to open `index.html` directly.
   Confirm in planning.
 - Whether to keep large binary assets (`app_images/`) in git or manage separately.
-- **Chýba (od Janky/produkcia):** zvuk (mp3), „táborový denníček" (referencia štýlu, DOD-3).
+- **Chýba (od Janky/produkcia):** ~~zvuk (mp3)~~ **DODANÉ S7 (9 mp3 v `audio/`)**; „táborový denníček" (referencia štýlu, DOD-3).
   Font: štýl z `INTRO.png` (Janka, S2) — nájdem voľný ekvivalent so SK diakritikou.
 - Verejný repo = heslá budú viditeľné → nechať public alebo dať private?
 - Mapa rozhodnutá: **prázdna `MAPA.jfif`** + postupné odhaľovanie (nie popísaná „ChatGPT" mapa).

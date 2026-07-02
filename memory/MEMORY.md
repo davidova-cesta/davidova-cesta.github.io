@@ -20,12 +20,11 @@ a store — detail lives in STATUS.md and session notes. One line per session in
 ## Last session
 _Newest first. ONE line per session: outcome headline + (resume: next action) if paused._
 
+- **S7 (2026-07-02)** — **Zvukové assety pre Fázu 6 dodané** (bez kódu): 9 mp3 vygenerovaných (ElevenLabs)
+  a premenovaných do `audio/`. `seal_crack.mp3` = ZMENA na zvuk odomknutia zámku (nie pečate, Janka OK).
+  Fáza 6 už NIE je blokovaná produkciou. (resume: postaviť prehrávač + tichý fallback; overiť loop `ambient.mp3`).
 - **S6 (2026-07-02)** — **Fáza 5 (D5 finálna sekvencia, obr.10–15) hotová a otestovaná** v prehliadači
-  (Jakub): finálna mapa so svetelnou vlnou → záverečná → PREKVAPENIE (klik) → šifra → kód 13177 (v tej
-  istej obrazovke) → truhlica. Klik na Jeruzalem prehrá finále znova; `koniecVideny` sa ukladá.
-  TOTEM/SIFRA/TRUHLICA → priehľadné PNG. Cold review: 0 FOUND (odstránený dvojitý render).
-  (resume: Fáza 6 — zvuk mp3 + tichý fallback).
+  (Jakub): finálna mapa → záverečná → PREKVAPENIE (klik) → šifra → kód 13177 → truhlica. Klik na
+  Jeruzalem prehrá finále znova; `koniecVideny` sa ukladá. Cold review: 0 FOUND. (resume: Fáza 6 — zvuk).
 - **S5 (2026-07-01)** — Fáza 4 (odhalenie symbolu po odomknutí) hotová: zámok → symbol+názov na
   pergamene, prerušiteľné; symboly D1/D3/D5 na priehľadné PNG (resume: Fáza 5 — D5 špeciál).
-- **S4 (2026-07-01)** — Fáza 3 (pergameny + obsah 5 dní) hotová: 2-krokový tok clue→heslo,
-  odomknutie výmenou pozadia za `ODOMKNUTIE.png`, D1 heslo/clue potvrdené (resume: Fáza 4).
