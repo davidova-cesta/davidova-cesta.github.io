@@ -422,8 +422,11 @@ function skusOdomknut() {
     aktivnyIndex = null;                     // zamkni ďalšie pokusy počas animácie
     ukazOdomknutie(den, function () {
       zavriHeslo();
-      vykresliZastavky(stav);
-      if (stav.dokonceneDni === DNI.length) spustiFinale();   // D5 → finálna sekvencia
+      if (stav.dokonceneDni === DNI.length) {
+        spustiFinale();               // D5 → finálna sekvencia (sama prekreslí mapu s vlnou)
+      } else {
+        vykresliZastavky(stav);       // D1–D4 → späť na mapu s novým symbolom
+      }
     });
   } else {
     nastavSpravu("Skúste ešte raz. Niektorá z indícií vám možno unikla.");
