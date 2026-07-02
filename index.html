@@ -41,6 +41,7 @@
         </svg>
       </button>
       <div id="menu-obsah" class="menu-obsah skryta">
+        <button id="tlacidlo-zvuk" class="menu-polozka" type="button">Vypnúť zvuk</button>
         <button id="tlacidlo-reset" class="menu-polozka" type="button">Vynulovať postup</button>
       </div>
     </div>
@@ -146,6 +147,37 @@
     </div>
 
   </div>
+
+  <!--
+    Zvuk (Fáza 6). Lokálne mp3, žiadny CDN — appka hrá aj offline z file://.
+    ambient = harfa v nekonečnej slučke (štartuje app.js až po prvom kliku vedúceho,
+    autoplay policy). Ostatné sú krátke efekty prehrané ponad harfu. Chýbajúci súbor
+    NESMIE zhodiť appku — app.js každé prehratie obalí do try/catch (EC-005, tichý fallback).
+    Poznámka: pri nesprávnom hesle sa ZÁMERNE neprehrá žiadny zvuk (BRS zákaz).
+  -->
+  <audio id="zvuk-ambient" src="audio/ambient.mp3" loop preload="auto"></audio>
+  <audio id="zvuk-seal_crack" src="audio/seal_crack.mp3" preload="auto"></audio>
+  <audio id="zvuk-light_reveal" src="audio/light_reveal.mp3" preload="auto"></audio>
+  <audio id="zvuk-celebration" src="audio/celebration.mp3" preload="auto"></audio>
+  <!-- Zvuky prostredia dňa: loop → hrajú v slučke, kým vedúci neklikne „Ďalej". -->
+  <audio id="zvuk-birds" src="audio/birds.mp3" loop preload="auto"></audio>
+  <audio id="zvuk-water" src="audio/water.mp3" loop preload="auto"></audio>
+  <audio id="zvuk-leaves" src="audio/leaves.mp3" loop preload="auto"></audio>
+  <audio id="zvuk-cave" src="audio/cave.mp3" loop preload="auto"></audio>
+  <audio id="zvuk-wind" src="audio/wind.mp3" loop preload="auto"></audio>
+  <!--
+    Fáza 6 doplnenie (Jakub): nové zvuky. Ak súbor ešte NEEXISTUJE (napr. tick/mystery
+    dodá Janka z ElevenLabs neskôr), appka ho TICHO preskočí (EC-005, žiadny pád).
+    market = ruch trhu = zvuk prostredia D5 clue karty (loop, ako birds/water/…);
+    whoosh = svišťanie počas svetelnej vlny (loop); tick = tikanie počas šifry (loop);
+    mystery = tón prekvapenia + odhalenia šifry (jednorazový).
+  -->
+  <audio id="zvuk-market" src="audio/market.mp3" loop preload="auto"></audio>
+  <!-- whoosh: jeden dlhý prelet (~4,2 s = presne dĺžka vlny), NIE loop → hrá raz cez celú vlnu -->
+  <audio id="zvuk-whoosh" src="audio/whoosh.mp3" preload="auto"></audio>
+  <!-- tick: loop → tikanie hrá počas lúštenia šifry, kým sa neprejde na kód/truhlicu -->
+  <audio id="zvuk-tick" src="audio/tick.mp3" loop preload="auto"></audio>
+  <audio id="zvuk-mystery" src="audio/mystery.mp3" preload="auto"></audio>
 
   <!-- Klasický <script> na konci tela — žiadny modul, žiadny fetch (kvôli file://) -->
   <script src="app.js"></script>

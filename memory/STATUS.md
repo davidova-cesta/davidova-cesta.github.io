@@ -4,6 +4,19 @@ one Read call ingests it (move old detail to session notes when it grows)._
 
 ## Recent sessions (rolling window)
 
+- **S8 (2026-07-02)** — **Fáza 6 (zvuk) — postavená a otestovaná** (Jakub, prehliadač; 3 dávky podľa jeho
+  spätnej väzby). Zvukový modul v `app.js` (jediný domov hlasitostí `HLASITOSTI`, `spustiZvuk` jadro,
+  `prehraj`/`spustiProstredie`/`zastavProstredie`/`stlmHarfu`/`prepniZvuk`). **Napojenie:** harfa `ambient`
+  loop, štart až na 1. klik vedúceho (autoplay policy, jednorazový `once` listener); zvuky prostredia D1–D5
+  hrajú **v slučke do „Ďalej"** — D1 birds, D2 water, D3 leaves, D4 cave, **D5 `market` (ruch trhu na clue
+  karte Jeruzalema)**; `seal_crack`+`light_reveal` pri odomknutí (**harfa sa vtedy stlmí na 0 a po dokončení
+  vráti** — obnova na každej ceste vrátane skip/Escape/reset); `whoosh` (**4,2 s prelet cez celú svetelnú
+  vlnu, NIE loop** — presne dĺžka vlny); `mystery` (prekvapenie + odhalenie šifry) + `tick` (loop tikanie
+  počas lúštenia, stop pri kóde); `celebration` fanfára pri truhlici (zakaždým). **Nesprávne heslo = ticho**
+  (BRS zákaz). **Menu „Vypnúť zvuk"** (prepínač, uložený v samostatnom kľúči `davidovaCesta.zvuk`).
+  **Chýbajúci mp3 = ticho, žiadny pád** (EC-005, try/catch + `p.catch`). **Všetkých 13 mp3 dodaných**
+  (Janka doplnila market/whoosh/tick/mystery). 3× cold review (15 kat. + invarianty loop-stop/harfa-obnova):
+  **0 reálnych defektov** (jediné opakované FOUND = `zvuk-wind` bez volajúceho — zámerná rezerva).
 - **S7 (2026-07-02)** — **Príprava assetov pre Fázu 6 (zvuk) — bez kódu.** Preštudovaný Assets Register
   v BRS (sekcia audio); pre každý z 9 zvukov napísaný AI-generátorový prompt (odporúčaný **ElevenLabs
   Sound Effects**, hudba ako záloha Suno). **Obsahová zmena (Janka OK):** `seal_crack.mp3` už NIE je
@@ -73,20 +86,23 @@ one Read call ingests it (move old detail to session notes when it grows)._
 - ✅ Fáza 3 — pergameny (clue + heslo + nesprávne) + obsah 5 dní (S4)
 - ✅ Fáza 4 — odhalenie symbolu po odomknutí (zámok → symbol+názov na pergamene, prerušiteľné) (S5)
 - ✅ Fáza 5 — D5 finálna sekvencia (finálna mapa + záverečná + TOTEM + SIFRA + 13177 + truhlica) (S6)
-- ⬜ Fáza 6 — zvuk (mp3 + tichý fallback) — NEXT
-- ⬜ Fáza 7 — polish (edge cases; napr. `onerror` fallback pre `<img>`)
+- ✅ Fáza 6 — zvuk (13 mp3 napojených + tichý fallback + menu „Vypnúť zvuk") (S8)
+- ⬜ Fáza 7 — polish (edge cases; napr. `onerror` fallback pre `<img>`) — NEXT
 - ⬜ Offline verification (open index.html with no internet)
 - ⬜ Camp-ready hand-off to the leader
 
 ## System / data state
 
 - Stack: static HTML/CSS/JS, offline-first, progress in `localStorage`. No server,
-  no DB, no network, no secrets.
+  no DB, no network, no secrets. **localStorage kľúče: `davidovaCesta.v1`** (postup) +
+  **`davidovaCesta.zvuk`** (vypnutie zvuku „off"/"on" — od S8, oddelený od postupu).
 - Tests: none yet.
-- Assets present: `audio/` — **9 zvukových mp3 dodaných (S7)**: `ambient` (harfa, loop), `seal_crack`
-  (odomknutie zámku — ZMENA z prasknutia pečate), `light_reveal` („wow" svetlo), `birds` D1, `wind`,
-  `water` D2, `leaves` D3, `cave` D4, `celebration` D5 finále. Generované cez ElevenLabs Sound Effects.
-  Pozn.: `ambient.mp3` bez seamless-loop nastavenia → overiť pri teste. Ešte NIE sú napojené v kóde (Fáza 6).
+- Assets present: `audio/` — **13 zvukových mp3 dodaných a napojených (S8)**: `ambient` (harfa, loop),
+  `seal_crack` (odomknutie zámku), `light_reveal` („wow"), `birds` D1, `water` D2, `leaves` D3, `cave` D4,
+  `market` D5 (ruch trhu), `celebration` (fanfára truhlica), `whoosh` (prelet svetelnej vlny, 4,2 s, nie loop),
+  `tick` (loop tikanie šifry), `mystery` (prekvapenie + šifra). `wind` = zámerná NEnapojená rezerva.
+  Generované cez ElevenLabs Sound Effects. Loop `ambient` overený OK (Jakub, S8). Hlasitosti vyvážené
+  v `HLASITOSTI` (`app.js`). Pozn.: `cave`/whoosh boli slabé — riešiteľné len hlasnejším súborom (kód púšťa 1.0).
 - Assets present: `app_images/` (mapa, 5 symbolov — všetky priehľadné PNG od S5; finále: `TOTEM.png`=obr.12,
   `SIFRA.png`=obr.13, `TRUHLICA.png`=obr.15 — všetky priehľadné PNG od S6; pergamen, pečať, svetlo, ODOMKNUTIE;
   „LOCK_*" sa NEpoužijú — odhaľujú symbol). BRS: jediný spec `BRS_fixed.docx`. Audit: viď `project_build_plan.md`.
@@ -101,8 +117,8 @@ one Read call ingests it (move old detail to session notes when it grows)._
   offline, so plan to also hand the leader the files to open `index.html` directly.
   Confirm in planning.
 - Whether to keep large binary assets (`app_images/`) in git or manage separately.
-- **Chýba (od Janky/produkcia):** ~~zvuk (mp3)~~ **DODANÉ S7 (9 mp3 v `audio/`)**; „táborový denníček" (referencia štýlu, DOD-3).
-  Font: štýl z `INTRO.png` (Janka, S2) — nájdem voľný ekvivalent so SK diakritikou.
+- **Chýba (od Janky/produkcia):** ~~zvuk (mp3)~~ **DODANÉ + NAPOJENÉ S8 (13 mp3 v `audio/`)**; „táborový
+  denníček" (referencia štýlu, DOD-3). Font: štýl z `INTRO.png` (Janka, S2) — nájdem voľný ekvivalent so SK diakritikou.
 - Verejný repo = heslá budú viditeľné → nechať public alebo dať private?
 - Mapa rozhodnutá: **prázdna `MAPA.jfif`** + postupné odhaľovanie (nie popísaná „ChatGPT" mapa).
 - **Heslo D1** „Hospodin hľadí na tvoje srdce" + clue HOSPODIN/HĽADÍ/NA/TVOJE/SRDCE —

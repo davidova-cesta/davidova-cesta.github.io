@@ -9,6 +9,196 @@
 
 "use strict";
 
+/* =========================================================================
+   Zvuk (Fáza 6)
+   Filozofia (BRS sekcia 10): harfa `ambient` hrá nepretržito v slučke; ostatné
+   zvuky sú efekty/podklady ponad ňu. Tvrdé pravidlá: všetko lokálne (offline);
+   chýbajúci/nefunkčný mp3 = TICHO, žiadny pád (EC-005); pri nesprávnom hesle sa
+   žiadny zvuk NEprehrá (BRS zákaz); ambient štartuje až pri prvom kliku vedúceho
+   (prehliadače blokujú autoplay pred interakciou).
+
+   Per-zvuk hlasitosti (Jakub, ladenie v prehliadači): harfa je jemný podklad,
+   `water` bol prisilný (prehlušoval harfu) → dole; `cave` bol slabý → hore.
+   Počas odomknutia (zámok + „wow") sa harfa stlmí na 0 a po návrate na mapu vráti,
+   aby zámok a wow vynikli. Zvuky prostredia dňa (birds/water/leaves/cave) hrajú
+   v SLUČKE, kým vedúci neklikne „Ďalej" na clue pergamene (potom sa zastavia).
+   ========================================================================= */
+
+/* Cieľové hlasitosti 0..1 pre každý zvuk (chýbajúci kľúč = 1,0). Jediný domov
+   vyváženia — ladí sa tu, nie roztrúsene po volaniach. */
+var HLASITOSTI = {
+  ambient: 0.45,        // jemný podklad
+  water: 0.35,          // bol prisilný → dole
+  cave: 1.0,            // bol slabý → naplno
+  birds: 0.7,
+  leaves: 0.7,
+  market: 0.7,          // ruch trhu = zvuk prostredia D5 clue karty (ako birds/water/…)
+  seal_crack: 1.0,
+  light_reveal: 1.0,
+  celebration: 1.0,
+  whoosh: 1.0,          // dlhý prelet cez celú vlnu — naplno, nech vynikne nad harfou
+  mystery: 0.9,
+  tick: 0.8             // tikanie počas lúštenia šifry
+};
+
+/* Ambient smie hrať až po prvom geste vedúceho. Kým je false, prehraj() efekty
+   preskočí — bez interakcie by ich prehliadač aj tak odmietol (a robili by hluk). */
+var zvukOdomknuty = false;
+
+/* Globálne stíšenie z menu („Vypnúť zvuk"), uložené v localStorage (prežije reštart). */
+var STORAGE_ZVUK_KLUC = "davidovaCesta.zvuk";
+var zvukVypnuty = nacitajZvukVypnuty();
+
+/** @returns {boolean} či má byť zvuk vypnutý (z localStorage; default zapnutý). */
+function nacitajZvukVypnuty() {
+  try {
+    return window.localStorage.getItem(STORAGE_ZVUK_KLUC) === "off";
+  } catch (e) {
+    return false;                       // úložisko blokované → default zapnutý
+  }
+}
+
+/**
+ * Vráti cieľovú hlasitosť zvuku so zohľadnením globálneho vypnutia.
+ * @param {string} nazov - kľúč zvuku.
+ * @returns {number} 0..1 (0 keď je zvuk vypnutý cez menu).
+ */
+function cielovaHlasitost(nazov) {
+  if (zvukVypnuty) return 0;
+  return typeof HLASITOSTI[nazov] === "number" ? HLASITOSTI[nazov] : 1;
+}
+
+/** Nastaví hlasitosť daného <audio> na cieľovú (ticho pri chýbajúcom elemente). */
+function nastavHlasitost(nazov) {
+  try {
+    var el = document.getElementById("zvuk-" + nazov);
+    if (el) el.volume = cielovaHlasitost(nazov);
+  } catch (e) {
+    // element nedostupný → ticho, appka beží ďalej
+  }
+}
+
+/** Prehrá zvuk (efekt aj loop) po nastavení hlasitosti; spoločné jadro. */
+function spustiZvuk(nazov, odZaciatku) {
+  if (!zvukOdomknuty) return;           // pred prvým gestom vedúceho žiadny zvuk
+  try {
+    var el = document.getElementById("zvuk-" + nazov);
+    if (!el) return;
+    el.volume = cielovaHlasitost(nazov);
+    if (odZaciatku) el.currentTime = 0;
+    var p = el.play();
+    // play() vracia promise; na file:// / pri chýbajúcom súbore je rejected → prehltni
+    if (p && typeof p.catch === "function") p.catch(function () {});
+  } catch (e) {
+    // element/audio nedostupné → ticho, appka beží ďalej
+  }
+}
+
+/**
+ * Prehrá krátky JEDNORAZOVý efekt ponad harfu (napr. seal_crack, light_reveal).
+ * @param {string} nazov - kľúč zvuku (bez prefixu "zvuk-").
+ */
+function prehraj(nazov) {
+  spustiZvuk(nazov, true);
+}
+
+/* Ktorý zvuk prostredia práve hrá v slučke (null = žiadny). Držíme ho, aby sme ho
+   pri „Ďalej"/zavretí clue vedeli zastaviť. Loop rieši `loop` atribút na <audio>. */
+var zvukProstrediaHra = null;
+
+/**
+ * Spustí zvuk prostredia dňa v slučke (hrá do „Ďalej"/zavretia clue).
+ * @param {string} nazov - kľúč zvuku prostredia.
+ */
+function spustiProstredie(nazov) {
+  zastavProstredie();                   // istota: nikdy nehrajú dva naraz
+  zvukProstrediaHra = nazov;
+  spustiZvuk(nazov, true);
+}
+
+/** Zastaví daný <audio> (pauza + presun na začiatok). Ticho pri chýbajúcom elemente. */
+function zastavZvuk(nazov) {
+  try {
+    var el = document.getElementById("zvuk-" + nazov);
+    if (el) { el.pause(); el.currentTime = 0; }
+  } catch (e) {
+    // element nedostupný → ticho
+  }
+}
+
+/** Zastaví bežiaci zvuk prostredia (pri „Ďalej", zavretí clue, resete). */
+function zastavProstredie() {
+  if (zvukProstrediaHra === null) return;
+  zastavZvuk(zvukProstrediaHra);
+  zvukProstrediaHra = null;
+}
+
+/** Zastaví svišťanie svetelnej vlny (po dobehnutí vlny alebo pri ukončení finále). */
+function zastavVlnu() {
+  zastavZvuk("whoosh");
+}
+
+/** Zastaví tikanie šifry (pri prechode na kód/truhlicu alebo ukončení finále). */
+function zastavTikanie() {
+  zastavZvuk("tick");
+}
+
+/**
+ * Stlmí/obnoví harfu počas odomknutia (zámok + „wow"), aby efekty vynikli.
+ * @param {boolean} stlm - true = na 0, false = späť na cieľovú hlasitosť.
+ */
+function stlmHarfu(stlm) {
+  try {
+    var el = document.getElementById("zvuk-ambient");
+    if (el) el.volume = stlm ? 0 : cielovaHlasitost("ambient");
+  } catch (e) {
+    // harfa nedostupná → ticho
+  }
+}
+
+/**
+ * Naštartuje harfu na pozadí (slučka). Volá sa raz, pri prvom geste vedúceho.
+ * Idempotentné: opakované volanie na už hrajúcej harfe nič nepokazí.
+ */
+function spustiAmbient() {
+  nastavHlasitost("ambient");
+  spustiZvuk("ambient", false);
+}
+
+/**
+ * Odomkne zvuk pri prvom geste vedúceho a naštartuje harfu. Naviaže sa v start()
+ * ako JEDNORAZOVý poslucháč (once) na celý dokument, takže zafunguje nech je prvý
+ * klik kdekoľvek (Začať, mapa, menu…). Druhýkrát sa už nevolá → harfa sa nereštartuje.
+ */
+function odomkniZvuk() {
+  if (zvukOdomknuty) return;
+  zvukOdomknuty = true;
+  spustiAmbient();
+}
+
+/**
+ * Prepne globálne vypnutie zvuku (menu). Uloží stav, stlmí/obnoví harfu aj bežiace
+ * prostredie hneď. Ak sa práve zapol a harfa ešte nehrá (nikto neklikol), naštartuje ju.
+ */
+function prepniZvuk() {
+  zvukVypnuty = !zvukVypnuty;
+  try {
+    window.localStorage.setItem(STORAGE_ZVUK_KLUC, zvukVypnuty ? "off" : "on");
+  } catch (e) {
+    // úložisko blokované → aspoň v tomto behu platí premenná
+  }
+  nastavHlasitost("ambient");           // okamžite premietni na hrajúcu harfu
+  if (zvukProstrediaHra) nastavHlasitost(zvukProstrediaHra);
+  if (!zvukVypnuty) odomkniZvuk();      // zapnutie z menu ráta ako gesto → rozohrá harfu
+  obnovMenuZvuk();
+}
+
+/** Zosúladí text položky menu s aktuálnym stavom zvuku. */
+function obnovMenuZvuk() {
+  var el = document.getElementById("tlacidlo-zvuk");
+  if (el) el.textContent = zvukVypnuty ? "Zapnúť zvuk" : "Vypnúť zvuk";
+}
+
 /* --- Vizuálne stavy zastávky (odvodené zo stavu, nie natvrdo) --- */
 var STAV = {
   DOKONCENA: "dokoncena",
@@ -28,6 +218,7 @@ var STAV = {
 */
 var DNI = [
   { id: "D1", nazov: "Pastier",   symbol: "app_images/PASTIER.png",  heslo: "Hospodin hľadí na tvoje srdce", x: 11, y: 70,
+    zvuk: "birds",
     clue: [
       { text: "HOSPODIN", cx: 34, cy: 16 },
       { text: "TVOJE",    cx: 70, cy: 40 },
@@ -36,6 +227,7 @@ var DNI = [
       { text: "NA",       cx: 20, cy: 52 }
     ] },
   { id: "D2", nazov: "Prak",      symbol: "app_images/PRAK.png",      heslo: "ODVAHA", x: 37, y: 54,
+    zvuk: "water",
     clue: [
       { text: "A", cx: 28, cy: 16 },
       { text: "H", cx: 68, cy: 22 },
@@ -45,6 +237,7 @@ var DNI = [
       { text: "A", cx: 40, cy: 74 }
     ] },
   { id: "D3", nazov: "Jonatán",   symbol: "app_images/JONATAN.png",  heslo: "PRIATEĽ MILUJE V KAŽDOM ČASE", x: 52, y: 30,
+    zvuk: "leaves",
     clue: [
       { text: "MILUJE",  cx: 30, cy: 18 },
       { text: "PRIATEĽ", cx: 62, cy: 40 },
@@ -53,6 +246,7 @@ var DNI = [
       { text: "KAŽDOM",  cx: 40, cy: 74 }
     ] },
   { id: "D4", nazov: "Jaskyňa",   symbol: "app_images/jask.png",      heslo: "JASKYŇA", x: 70, y: 60,
+    zvuk: "cave",
     clue: [
       { text: "netopier",  cx: 32, cy: 16 },
       { text: "ozvena",    cx: 68, cy: 32 },
@@ -61,6 +255,7 @@ var DNI = [
       { text: "zima",      cx: 72, cy: 74 }
     ] },
   { id: "D5", nazov: "Jeruzalem", symbol: "app_images/JERUZALEM.png", heslo: "BOH MA VIEDOL CELÚ CESTU", x: 88, y: 22,
+    zvuk: "market",
     clue: [
       { text: "VIEDOL", cx: 32, cy: 18 },
       { text: "BOH",    cx: 68, cy: 30 },
@@ -287,11 +482,13 @@ function otvorClue(index) {
   aktivnyIndex = index;
   vykresliClue(DNI[index]);
   ukazPergamen("clue-pergamen", true);
+  if (DNI[index].zvuk) spustiProstredie(DNI[index].zvuk);   // zvuk prostredia dňa v slučke do „Ďalej"
 }
 
 /** ĎALEJ z clue pergamenu → HESLO pergamen (obr.4). Pole je čisté a zaostrené. */
 function otvorHeslo() {
   if (aktivnyIndex === null) return;
+  zastavProstredie();                   // clue sa zatvára → zvuk prostredia končí
   var pole = document.getElementById("pole-heslo");
   pole.value = "";
   nastavSpravu("");
@@ -308,6 +505,8 @@ function otvorHeslo() {
  */
 function zavriHeslo() {
   aktivnyIndex = null;
+  zastavProstredie();                   // clue/heslo sa zatvára → zvuk prostredia končí
+  stlmHarfu(false);                     // istota: ak sa zatvára počas odomknutia (reset), vráť harfu
   zrusOdomkCasovace();
   sekvenciaHotovo = null;
   resetOdomknutie();
@@ -357,12 +556,15 @@ function zrusOdomkCasovace() {
  */
 function ukazOdomknutie(den, hotovo) {
   sekvenciaHotovo = hotovo;
+  stlmHarfu(true);                     // harfa na 0 → zámok a „wow" vyniknú (obnoví dokonciOdomknutie)
   document.getElementById("heslo-obsah").classList.add("skryta");
   document.getElementById("heslo-pozadie").src = POZADIE_ODOMKNUTE;   // obr.6 — odopnutý zámok
+  prehraj("seal_crack");               // zvuk odomknutia vintage zámku (súčasne s obr.6)
 
   odomkCasovace.push(window.setTimeout(function () {
     // Zámok zmizne: pozadie späť na obyčajný pergamen, aby ostal vidieť len symbol.
     document.getElementById("heslo-pozadie").src = POZADIE_ZAPECATENE;
+    prehraj("light_reveal");           // „wow" tón v okamihu zjavenia symbolu dňa
     var obr = document.getElementById("heslo-symbol-obr");
     obr.src = den.symbol;
     obr.alt = den.nazov;                 // názov smie byť v DOM až po odomknutí (BR-003)
@@ -383,6 +585,7 @@ function ukazOdomknutie(den, hotovo) {
  */
 function dokonciOdomknutie() {
   zrusOdomkCasovace();
+  stlmHarfu(false);                     // vráť harfu na cieľovú hlasitosť (aj pri preskočení)
   var hotovo = sekvenciaHotovo;
   sekvenciaHotovo = null;
   if (hotovo) hotovo();
@@ -483,6 +686,8 @@ function skryFinaleObaly() {
  */
 function zavriFinale() {
   zrusFinaleCasovace();
+  zastavVlnu();                         // istota: ak sa finále ukončí počas vlny, whoosh doznie
+  zastavTikanie();                      // istota: ak sa ukončí počas šifry, tikanie doznie
   finaleFaza = null;
   skryFinaleObaly();
   document.getElementById("zastavky").classList.remove("vlna");
@@ -498,12 +703,14 @@ function spustiFinale() {
   ukazObrazovku("obrazovka-mapa");
   vykresliZastavky(nacitajStav());
   document.getElementById("zastavky").classList.add("vlna");
+  prehraj("whoosh");                    // svišťanie v slučke počas celej svetelnej vlny
   finaleCasovace.push(window.setTimeout(ukazZaverecnu, TRVANIE_VLNY_MS));
 }
 
 /** Obr.11 — záverečná obrazovka (Jeruzalem v zlatom svetle + texty). */
 function ukazZaverecnu() {
   zrusFinaleCasovace();
+  zastavVlnu();                         // vlna dobehla (alebo preskočená klikom) → svišťanie stop
   document.getElementById("zastavky").classList.remove("vlna");
   finaleFaza = "zaverecna";
   skryFinaleObaly();
@@ -520,12 +727,15 @@ function ukazMystery() {
   skryFinaleObaly();
   document.getElementById("mystery-obr").src = FINALE_OBRAZKY.totem;
   document.getElementById("finale-mystery").classList.remove("skryta");
+  prehraj("mystery");                  // tajomný tón prekvapenia
 }
 
 /** Obr.13 — pergamen so symbolmi a číslicami (deti hádajú poradie). */
 function ukazSifru() {
   finaleFaza = "sifra";
   skryFinaleObaly();
+  prehraj("mystery");                  // tajomný tón pri odhalení šifry
+  prehraj("tick");                     // po ňom tikanie v slučke počas lúštenia (stop pri kóde)
   document.getElementById("sifra-obr").src = FINALE_OBRAZKY.sifra;
   // Pri (opätovnom) vstupe do šifry: kód skrytý, pergamen v plnom jase, tlačidlo Ďalej späť.
   document.getElementById("kod-blok").classList.add("skryta");
@@ -540,6 +750,7 @@ function ukazSifru() {
  */
 function ukazKod() {
   finaleFaza = "kod";
+  zastavTikanie();                     // kód odhalený → napätie (tikanie) končí
   document.getElementById("sifra-obr").classList.add("sifra-stlmena");   // pergamen do pozadia
   document.getElementById("sifra-dalej").classList.add("skryta");        // jeho Ďalej nahradí Ďalej v kód-bloku
   document.getElementById("kod-cislo").textContent = KOD_TRUHLICE;
@@ -552,6 +763,7 @@ function ukazTruhlicu() {
   skryFinaleObaly();
   document.getElementById("truhlica-obr").src = FINALE_OBRAZKY.truhlica;
   document.getElementById("finale-truhlica").classList.remove("skryta");
+  prehraj("celebration");              // jediná povolená fanfára — zakaždým, aj pri replay
   var stav = nacitajStav();
   if (!stav.koniecVideny) {
     stav.koniecVideny = true;         // finále dopozerané až po truhlicu
@@ -595,11 +807,19 @@ function vynulujPostup() {
 
 /** Naviazanie udalostí a prvé vykreslenie zo stavu. */
 function start() {
+  // Autoplay policy: harfa smie štartovať až po prvom geste vedúceho. Jednorazový
+  // (once) poslucháč na celom dokumente → zafunguje nech je prvý klik kdekoľvek
+  // (Začať, mapa, menu…) a už sa neopakuje (harfa sa nereštartuje). Zvuk je doplnok
+  // — ak by odomknutie zlyhalo, appka beží ďalej ticho (EC-005).
+  document.addEventListener("click", odomkniZvuk, { once: true });
+
   document.getElementById("tlacidlo-zacat")
     .addEventListener("click", function () { ukazObrazovku("obrazovka-mapa"); });
 
   document.getElementById("menu-tlacidlo").addEventListener("click", prepniMenu);
   document.getElementById("tlacidlo-reset").addEventListener("click", vynulujPostup);
+  document.getElementById("tlacidlo-zvuk")
+    .addEventListener("click", function () { zavriMenu(); prepniZvuk(); });
 
   document.getElementById("tlacidlo-dalej").addEventListener("click", otvorHeslo);
   document.getElementById("tlacidlo-odomknut").addEventListener("click", skusOdomknut);
@@ -639,6 +859,7 @@ function start() {
     else if (aktivnyIndex !== null) zavriHeslo();
   });
 
+  obnovMenuZvuk();                      // text položky podľa uloženého stavu zvuku
   vykresliZastavky(nacitajStav());
 }
 
