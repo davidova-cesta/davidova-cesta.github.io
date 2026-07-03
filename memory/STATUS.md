@@ -4,6 +4,22 @@ one Read call ingests it (move old detail to session notes when it grows)._
 
 ## Recent sessions (rolling window)
 
+- **S12 (2026-07-03)** — **TASK MAPA.1: spojovacia „cesta" medzi zastávkami na mape** (Jakub, prehliadač,
+  iteratívne; commit `88f1883`). **Zlatá bodková cesta** (variant D: tmavý obrys `.halo` + zlaté jadro
+  `.core`) medzi dokončenými bodmi; SVG `#cesta` medzi `.pozadie` a `#zastavky`. **BR-003:** kreslí sa len
+  segment `i` keď `i+1 < dokonceneDni` (oba konce dokončené) → nikdy k uzamknutému bodu (5× cold review,
+  0 defektov). **Zakončenie pri okraji kruhu** (`skratKoniec`, odsun = polomer 7,5 % šírky + 6 px).
+  **Kľukaté trasy cez mostíky:** `DNI[i].body` = pole medzibodov v % javiska (D1:4, D2:2, D3:8, D4:3 body),
+  hladká **Catmull-Rom** krivka (`cestaZBodov`); vyladené interaktívnym ladítkom (zmazané). **Animácia
+  kreslenia** najnovšieho segmentu **PO DĹŽKE trasy** — SVG `<mask>` s bielou čiarou + `stroke-dashoffset`
+  (`vytvorAnimovanuCestu`); dĺžka meraná **až po pripojení do DOM** + trieda `.kresli` (spoľahlivé v každom
+  prehliadači — poistka z reviewu). Sleduje každý ohyb (dole, potom doprava). **Škálovanie bodiek** podľa
+  šírky mapy (pomery `HRUBKA_*`/`BODKA_*`/`MEDZERA_BODIEK_SIRKA` × W, nie px → rovnaká veľkosť na projektore).
+  **Resize listener** prekreslí cestu pri zmene okna (debounce 150 ms). **Finále:** nová podfáza
+  `finaleFaza="kreslenie"` — cesta jaskyňa→Jeruzalem sa najprv dokreslí (`TRVANIE_KRESLENIA_CESTY_MS=2700`),
+  AŽ POTOM `spustiVlnu()` (svetelná vlna). **Zvýraznenie zlatých kruhov** (zanikali v mape): okraj+žiara
+  škálované `cqw` (intenzita „J1") + vnútorný tmavý obrys „O1" (`inset` box-shadow) na dokončenej/aktívnej;
+  uzamknutá ostáva šedá (BR-003). Otestované v prehliadači (Jakub): všetkých 5 ciest + animácie + finále OK.
 - **S11 (2026-07-03)** — **Doladenie veľkostí/pozícií 5 symbolov na mape (pokračovanie S9)** (Jakub, prehliadač,
   iteratívne). Len hodnoty v `DNI[].mapa{}` + `x/y` (žiadny zásah do pixelov, plne reverzibilné): **D1 Pastier**
   kruh doprava+hore (`x:8→11, y:73→71`) lebo vyčnieval z mapy + postava menšia (`92%→86%`); **D2 Prak** menší
@@ -128,6 +144,11 @@ one Read call ingests it (move old detail to session notes when it grows)._
 - Stack: static HTML/CSS/JS, offline-first, progress in `localStorage`. No server,
   no DB, no network, no secrets. **localStorage kľúče: `davidovaCesta.v1`** (postup) +
   **`davidovaCesta.zvuk`** (vypnutie zvuku „off"/"on" — od S8, oddelený od postupu).
+  **S12 localStorage NEZMENENÝ** (kľúč aj tvar `{verzia,dokonceneDni,koniecVideny}` netknutý —
+  cesta je čisto vizuálna vrstva čítajúca `dokonceneDni`).
+- **Mapa – cesta (S12):** per-segment medzibody `DNI[i].body` (pole `{x,y}` v % javiska, voliteľné =
+  rovná čiara). Cesta = SVG `#cesta` (variant D bodky, škálované cqw/pomer k W). Animácia po dĺžke
+  (SVG maska + `stroke-dashoffset`). Kruhy `.stav-*` majú J1 zvýraznenie + O1 inset obrys (cqw).
 - Tests: none yet.
 - Assets present: `audio/` — **13 zvukových mp3 dodaných a napojených (S8)**: `ambient` (harfa, loop),
   `seal_crack` (odomknutie zámku), `light_reveal` („wow"), `birds` D1, `water` D2, `leaves` D3, `cave` D4,
