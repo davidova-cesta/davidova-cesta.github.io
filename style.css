@@ -98,6 +98,54 @@ body {
   inset: 0;
 }
 
+/* --- Spojovacia „cesta": zlaté prerušované segmenty medzi dokončenými bodmi ---
+   Leží NAD mapou, POD zastávkami (poradie v DOM). SVG bez viewBox → jeho súradnicový
+   systém = vlastné pixely (rozmer javiska); koncové body v % (app.js) sa naň mapujú
+   presne ako left/top zastávok. pointer-events:none → čiara nikdy neblokuje kliky. */
+.cesta {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+/* Variant D — zlaté bodky s tmavým obrysom: tmavé „halo" pod jasným zlatým „core".
+   Obrys drží zlatú farbu čitateľnú aj na béžovej mape. Segmenty sú `<path>` krivky
+   (kvôli zakriveniu cez mostíky) → fill:none, aby sa nevyplnilo vnútro krivky.
+   Hrúbka a bodkovanie (stroke-width, stroke-dasharray) sa NEnastavujú tu, ale inline
+   v app.js (`vytvorSegment`) ako pomer k šírke mapy → rovnaká veľkosť bodiek pri každej
+   veľkosti okna aj na projektore. Tu ostáva len farba + zakončenie. */
+.cesta path {
+  fill: none;
+  stroke-linecap: round;
+}
+.cesta .halo {
+  stroke: rgba(50, 30, 10, 0.8);       /* tmavý obrys pod zlatou */
+}
+.cesta .core {
+  stroke: rgba(230, 190, 90, 1);       /* jasná zlatá jadro */
+}
+
+/* Animácia najnovšieho segmentu po odomknutí dňa: bodky sa odkrývajú PO DĹŽKE trasy
+   (sledujú každý ohyb kľukatej cesty), nie jedným smerom. Realizuje maska (app.js
+   `vytvorAnimovanuCestu`): biela čiara pozdĺž trasy sa „kreslí" cez stroke-dashoffset od
+   plnej dĺžky po 0. `animation-delay` je krátka pauza po objavení symbolu. Prekreslením
+   mapy element zanikne → animácia sa čisto zruší.
+   POZOR: dĺžka (delay 0,7 s + 1,8 s) je zosúladená s `TRVANIE_KRESLENIA_CESTY_MS`
+   v app.js (finále čaká na dokreslenie cesty pred vlnou) — pri zmene uprav OBE. */
+.cesta-maska-ciara {
+  stroke-dasharray: var(--dlzka-cesty);
+  stroke-dashoffset: var(--dlzka-cesty);   /* maska najprv skrytá (celá cesta „nenakreslená") */
+}
+/* Trieda `.kresli` pridá app.js až po zmeraní dĺžky (po pripojení do DOM) → animácia
+   sa spustí kontrolovane, nie kým je `--dlzka-cesty` ešte nenastavená. */
+.cesta-maska-ciara.kresli {
+  animation: kresliCestu 1.8s ease-out 0.7s both;
+}
+@keyframes kresliCestu {
+  to { stroke-dashoffset: 0; }             /* „nakreslí" masku od začiatku po koniec trasy */
+}
+
 .zastavka {
   position: absolute;
   transform: translate(-50%, -50%);   /* left/top = STRED bodu */
@@ -111,11 +159,16 @@ body {
   place-items: center;
 }
 
-/* --- Dokončená: odhalený symbol v zlato orámovanom kruhu so žiarou --- */
+/* --- Dokončená: odhalený symbol v zlato orámovanom kruhu so žiarou ---
+   Okraj a žiara sú v cqw (% šírky javiska), nie v px → kruh nezaniká ani na projektore
+   (pevné px by boli na veľkej mape tenké). Intenzita „J1" — jemné zvýraznenie. */
 .stav-dokoncena {
-  background: rgba(255, 244, 214, 0.12);
-  border: 3px solid rgba(214, 173, 95, 0.9);
-  box-shadow: 0 0 18px 4px rgba(214, 173, 95, 0.45);
+  background: rgba(255, 244, 214, 0.13);
+  border: 0.5cqw solid rgba(206, 162, 78, 0.95);
+  /* inset tmavý obrys (O1) = jemná hranica medzi symbolom a zlatým okrajom → kruh je
+     definovaný, symbol vynikne; potom vonkajšia zlatá žiara. */
+  box-shadow: inset 0 0 0 0.12cqw rgba(40, 25, 10, 0.85),
+              0 0 2cqw 0.4cqw rgba(214, 173, 95, 0.5);
   overflow: hidden;                   /* kruh je maska — čo presahuje (zväčšený symbol) sa oreže */
 }
 /* Symbol na mape. Default = orez do kruhu (cover + border-radius) — vhodné pre
@@ -135,10 +188,13 @@ body {
   display: block;
 }
 
-/* --- Aktívna: pulzujúci zlatý bod + krúžok, žiadny symbol (žiadny spoiler) --- */
+/* --- Aktívna: pulzujúci zlatý bod + krúžok, žiadny symbol (žiadny spoiler) ---
+   Rovnaké zvýraznenie okraja/žiary ako dokončená (J1, cqw) → rovnako viditeľná na mape. */
 .stav-aktivna {
-  background: rgba(255, 244, 214, 0.10);
-  border: 3px solid rgba(214, 173, 95, 0.9);
+  background: rgba(255, 244, 214, 0.13);
+  border: 0.5cqw solid rgba(206, 162, 78, 0.95);
+  box-shadow: inset 0 0 0 0.12cqw rgba(40, 25, 10, 0.85),
+              0 0 2cqw 0.4cqw rgba(214, 173, 95, 0.5);
 }
 .zastavka.klikatelna {
   cursor: pointer;
@@ -156,7 +212,7 @@ body {
   position: absolute;
   inset: -6%;
   border-radius: 50%;
-  border: 3px solid rgba(240, 200, 96, 0.8);
+  border: 0.5cqw solid rgba(240, 200, 96, 0.8);   /* škálované ako okraj zastávky */
   animation: puls 1.8s ease-out infinite;
 }
 @keyframes puls {
@@ -171,7 +227,9 @@ body {
       rgba(228, 224, 214, 0.85) 40%,
       rgba(228, 224, 214, 0.35) 75%,
       rgba(228, 224, 214, 0.0) 100%);
-  border: 2px solid rgba(120, 120, 120, 0.35);
+  /* Okraj škálovaný (cqw) a o čosi výraznejší, aby bod nezanikol — ale ostáva ŠEDÝ
+     (nie zlatý), aby uzamknutá zastávka nevyzerala ako odomknutá (BR-003). */
+  border: 0.5cqw solid rgba(110, 110, 110, 0.45);
 }
 .stav-uzamknuta .zamok {
   width: 42%;

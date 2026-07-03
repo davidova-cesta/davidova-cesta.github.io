@@ -26,6 +26,12 @@
     <!-- 2) MAPA -->
     <section id="obrazovka-mapa" class="obrazovka skryta">
       <img class="pozadie" src="app_images/MAPA.jfif" alt="Mapa Dávidovej cesty" />
+      <!-- Spojovacia „cesta" medzi dokončenými bodmi (pod zastávkami, nad mapou).
+           Segmenty kreslí app.js LEN medzi odomknutými dňami (BR-003 — žiadny spoiler).
+           Bez viewBox → súradnicový systém SVG = jeho vlastné pixely (rozmer javiska);
+           app.js počíta koncové body v px (skrátené o polomer kruhu), takže žiadne
+           skreslenie hrúbky ťahu. -->
+      <svg id="cesta" class="cesta" aria-hidden="true"></svg>
       <!-- Zastávky vykreslí app.js zo stavu (dátami riadený návrh) -->
       <div id="zastavky" class="zastavky"></div>
     </section>

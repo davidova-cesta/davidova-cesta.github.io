@@ -219,6 +219,8 @@ var STAV = {
 var DNI = [
   { id: "D1", nazov: "Pastier",   symbol: "app_images/PASTIER_chlapec.png",  heslo: "Hospodin hľadí na tvoje srdce", x: 11, y: 71,
     zvuk: "birds",
+    // Medzibody cesty D1→D2 (kľukatá cesta cez mostík v pozadí mapy), v % javiska. Vyladené v ladenie-cesty.html.
+    body: [{ x: 21, y: 71.3 }, { x: 25, y: 75 }, { x: 30.5, y: 72.7 }, { x: 34.8, y: 68.3 }],
     // Pastier: orezaný výrez len chlapca + ovečky pri pravej nohe (PASTIER_chlapec.png, bez
     // stromu a stáda), centrovaný v kruhu (contain). Veľkosť zladená s jaskyňou (nie príliš veľký).
     mapa: { velkost: "86%", fit: "contain", posunX: "6%", posunY: "-6%" },
@@ -231,6 +233,8 @@ var DNI = [
     ] },
   { id: "D2", nazov: "Prak",      symbol: "app_images/PRAK_blizko.png",      heslo: "ODVAHA", x: 37, y: 54,
     zvuk: "water",
+    // Medzibody cesty D2→D3, v % javiska. Vyladené v ladenie-cesty.html.
+    body: [{ x: 44.7, y: 46.8 }, { x: 48, y: 43.3 }],
     // Prak+kamene: prekomponované, prak a kamene priložené tesne k sebe (PRAK_blizko.png,
     // bez veľkej medzery) → väčšie a výraznejšie v kruhu. Contain, bez orezu, rámik ostáva.
     // Zmenšený, aby sa prak+kamene zmestili do kruhu bez orezu bokov (obsah ide od kraja po kraj).
@@ -245,6 +249,9 @@ var DNI = [
     ] },
   { id: "D3", nazov: "Jonatán",   symbol: "app_images/JONATAN_sat.png",  heslo: "PRIATEĽ MILUJE V KAŽDOM ČASE", x: 52, y: 30,
     zvuk: "leaves",
+    // Medzibody cesty D3→D4, v % javiska. Vyladené v ladenie-cesty.html.
+    body: [{ x: 57.3, y: 50.2 }, { x: 59, y: 51.6 }, { x: 57, y: 60.1 }, { x: 52.5, y: 63.8 },
+           { x: 51.6, y: 69.3 }, { x: 58, y: 74.4 }, { x: 61.3, y: 79 }, { x: 64, y: 76.7 }],
     // Jonatán (strom s lukom a tulcom): sýtejšia/kontrastnejšia verzia — výraznejší voči mape.
     // Zmenšený vnútri kruhu, aby bol zladený s ostatnými symbolmi (najmä jaskyňou).
     mapa: { velkost: "82%", fit: "contain", orez: false },
@@ -257,6 +264,8 @@ var DNI = [
     ] },
   { id: "D4", nazov: "Jaskyňa",   symbol: "app_images/jask_sat.png",      heslo: "JASKYŇA", x: 70, y: 60,
     zvuk: "cave",
+    // Medzibody cesty D4→D5, v % javiska. Vyladené v ladenie-cesty.html.
+    body: [{ x: 77.5, y: 45.9 }, { x: 79.8, y: 41.1 }, { x: 83.9, y: 39.7 }],
     // Jaskyňa: sýtejšia/kontrastnejšia verzia (jask_sat.png) — výraznejšia voči pozadiu mapy.
     // Zväčšená, aby veľkostne sadla k ostatným (pozor: príliš veľké contain oreže boky kruhom).
     mapa: { velkost: "102%", fit: "contain", orez: false },
@@ -458,8 +467,182 @@ function vytvorZastavku(den, stav, index) {
   return el;
 }
 
-/** Prekreslí všetkých 5 zastávok podľa aktuálneho stavu. */
-function vykresliZastavky(stav) {
+// Polomer kruhu zastávky = 7,5 % ŠÍRKY javiska (CSS `.zastavka { width: 15cqw }`,
+// t.j. priemer 15 % šírky). Single source: ak sa v CSS zmení 15cqw, zmeň aj toto.
+var POLOMER_ZASTAVKY_SIRKA = 0.075;
+// Malá medzera navyše, aby sa čiara okraja kruhu nedotýkala (v px javiska).
+var MEDZERA_CESTY_PX = 6;
+// Rozmery bodkovej cesty ako POMER k šírke javiska (nie pevné px), aby bodky vyzerali
+// rovnako veľké pri každej veľkosti okna aj na projektore (inak sú na veľkej mape drobné).
+// Ladené voči šírke ~950 px (pôvodné px: core 4, halo 8, dash 3/13).
+var HRUBKA_JADRA_SIRKA = 0.0042;     // core stroke-width (≈ 4 px pri 950)
+var HRUBKA_HALO_SIRKA = 0.0084;      // halo stroke-width (≈ 8 px)
+var BODKA_SIRKA = 0.0032;            // dĺžka bodky v dash (≈ 3 px)
+var MEDZERA_BODIEK_SIRKA = 0.0137;   // medzera medzi bodkami (≈ 13 px)
+
+/**
+ * Vykreslí zlatú prerušovanú „cestu" medzi dokončenými bodmi.
+ * BR-003 (žiadny spoiler): segment sa kreslí LEN medzi dvoma po sebe idúcimi
+ * DOKONČENÝMI dňami — teda `dokonceneDni - 1` segmentov. Nikdy nevedie čiara
+ * k aktívnemu ani uzamknutému bodu (to by prezradilo jeho polohu).
+ *
+ * Každý segment sa skráti o polomer kruhu (+ malá medzera) na oboch koncoch, aby
+ * čiara končila PRI OKRAJI zastávky, nie v jej strede (Janka: nech neprechádza cez kruh).
+ * Skracovanie sa počíta v PIXELOCH javiska — % na osi X a Y majú rôznu dĺžku (16:9),
+ * takže odsun v % by dal na každej osi inú medzeru. Súradnice bodov ostávajú v % (DNI[].x/y).
+ *
+ * Ak `animujPosledny` je true, POSLEDNÝ (najnovší) segment sa vykreslí cez `vytvorAnimovanuCestu`
+ * — maska ho postupne odkryje po dĺžke trasy (sleduje ohyby cesty). Staré segmenty sú
+ * vždy hneď plné. Volá sa tak len po odomknutí dňa.
+ * @param {Object} stav - stav s poľom `dokonceneDni`.
+ * @param {boolean} [animujPosledny] - animovať najnovší segment (default false = všetko staticky).
+ */
+function vykresliCestu(stav, animujPosledny) {
+  var svg = document.getElementById("cesta");
+  svg.innerHTML = "";
+  var rect = svg.getBoundingClientRect();
+  var W = rect.width, H = rect.height;
+  // Ak je mapa skrytá/pred layoutom, rect je 0×0 → odsun 0 a všetky súradnice 0;
+  // guard `dlzka <= 2*odsun` (0<=0) potom preskočí všetky segmenty → nenakreslí sa
+  // nič a nedôjde k deleniu nulou. Cesta sa dokreslí, keď je mapa viditeľná.
+  var odsun = (W > 0) ? POLOMER_ZASTAVKY_SIRKA * W + MEDZERA_CESTY_PX : 0;
+  var poslednyIndex = stav.dokonceneDni - 2;   // i posledného segmentu (spája i a i+1)
+
+  // Spájame len dvojice bodov, ktoré sú OBA dokončené: i a i+1, kde i+1 < dokonceneDni.
+  for (var i = 0; i + 1 < stav.dokonceneDni; i++) {
+    // Zoznam bodov cesty v px: zastávka A → voliteľné medzibody (DNI[i].body) → zastávka B.
+    // Medzibody (kľukatá cesta cez mostíky) sú v % javiska; prázdne pole = rovná čiara.
+    var body = [{ x: DNI[i].x / 100 * W, y: DNI[i].y / 100 * H }];
+    (DNI[i].body || []).forEach(function (b) {
+      body.push({ x: b.x / 100 * W, y: b.y / 100 * H });
+    });
+    body.push({ x: DNI[i + 1].x / 100 * W, y: DNI[i + 1].y / 100 * H });
+
+    // Skráť oba konce o polomer kruhu (+ medzera) v smere k susednému bodu, aby cesta
+    // končila PRI OKRAJI zastávky, nie v jej strede. Skracuje sa voči prvému/poslednému
+    // medzibodu (nie voči celkovému smeru), lebo cesta môže zo zastávky vychádzať šikmo.
+    if (!skratKoniec(body, 0, 1, odsun)) { continue; }               // začiatok pri A
+    if (!skratKoniec(body, body.length - 1, body.length - 2, odsun)) { continue; }  // koniec pri B
+
+    var d = cestaZBodov(body);                                       // hladká krivka cez body
+    // Variant D: dve krivky na segment — tmavý obrys (halo) POD zlatým jadrom (core).
+    var halo = vytvorSegment(d, "halo", W);
+    var core = vytvorSegment(d, "core", W);
+
+    if (animujPosledny && i === poslednyIndex && W > 0) {
+      // Najnovší segment sa animuje: bodky sa odkrývajú PO DĹŽKE trasy (sledujú každý ohyb
+      // kľukatej cesty — dole, potom doprava…), nie jedným smerom. Technika: SVG maska =
+      // plná biela čiara pozdĺž tej istej trasy, ktorá sa „kreslí" cez stroke-dashoffset;
+      // maska postupne odkrýva bodkovaný segment presne v poradí od zastávky A po B.
+      var anim = vytvorAnimovanuCestu(d, halo, core, W);
+      svg.appendChild(anim.g);
+      // Dĺžku merať AŽ po pripojení do DOM (getTotalLength je tak spoľahlivý v každom
+      // prehliadači, nezávisle od podpory merania na odpojenom uzle) → potom spustiť animáciu.
+      var dlzka = anim.maskaCiara.getTotalLength();
+      anim.maskaCiara.style.setProperty("--dlzka-cesty", dlzka);
+      anim.maskaCiara.classList.add("kresli");
+    } else {
+      svg.appendChild(halo);
+      svg.appendChild(core);
+    }
+  }
+}
+
+/**
+ * Skráti koniec cesty: posunie bod na indexe `kon` o `odsun` px smerom k susedovi `sused`,
+ * aby cesta začínala/končila pri OKRAJI kruhu zastávky. Mutuje pole `body`.
+ * @returns {boolean} false ak je úsek kratší než odsun (cesta by sa obrátila) → nekresliť.
+ */
+function skratKoniec(body, kon, sused, odsun) {
+  var dx = body[sused].x - body[kon].x, dy = body[sused].y - body[kon].y;
+  var dl = Math.sqrt(dx * dx + dy * dy);
+  if (dl <= odsun) { return false; }
+  body[kon] = { x: body[kon].x + dx / dl * odsun, y: body[kon].y + dy / dl * odsun };
+  return true;
+}
+
+/**
+ * Zostaví SVG `d` atribút hladkej krivky prechádzajúcej VŠETKÝMI bodmi (Catmull-Rom →
+ * kubické Bézier). Pri dvoch bodoch je to rovná čiara; pri viacerých plynulý oblúk cez ne.
+ * @param {Array<{x:number,y:number}>} p - body cesty v px (min. 2).
+ * @returns {string} hodnota atribútu `d`.
+ */
+function cestaZBodov(p) {
+  var d = "M " + p[0].x + " " + p[0].y;
+  for (var i = 0; i < p.length - 1; i++) {
+    var p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2;
+    // Catmull-Rom → Bézier ovládacie body (napätie 1/6 = štandardná hladkosť).
+    var c1x = p1.x + (p2.x - p0.x) / 6, c1y = p1.y + (p2.y - p0.y) / 6;
+    var c2x = p2.x - (p3.x - p1.x) / 6, c2y = p2.y - (p3.y - p1.y) / 6;
+    d += " C " + c1x + " " + c1y + " " + c2x + " " + c2y + " " + p2.x + " " + p2.y;
+  }
+  return d;
+}
+
+/**
+ * Vytvorí jeden SVG `<path>` cesty daného CSS druhu (halo/core) z hotového `d` atribútu.
+ * Hrúbka a bodkovanie sa počítajú ako pomer k šírke javiska `W` → bodky vyzerajú rovnako
+ * veľké pri každej veľkosti mapy (na projektore aj v malom okne). Farba je z CSS.
+ * @returns {SVGPathElement}
+ */
+function vytvorSegment(d, trieda, W) {
+  var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("class", trieda);
+  path.setAttribute("d", d);
+  var hrubka = (trieda === "halo" ? HRUBKA_HALO_SIRKA : HRUBKA_JADRA_SIRKA) * W;
+  path.setAttribute("stroke-width", hrubka);
+  path.setAttribute("stroke-dasharray", (BODKA_SIRKA * W) + " " + (MEDZERA_BODIEK_SIRKA * W));
+  return path;
+}
+
+// Namespace pre SVG uzly (createElementNS je len identifikátor, nie sieťové volanie — file:// OK).
+var SVG_NS = "http://www.w3.org/2000/svg";
+
+/**
+ * Zostaví skupinu s maskou, ktorá odkryje bodkovaný segment (halo+core) PO DĹŽKE trasy.
+ * Maska = plná biela čiara pozdĺž tej istej krivky `d`. Vráti aj samotnú čiaru masky, aby
+ * volajúci po PRIPOJENÍ do DOM zmeral jej dĺžku (`getTotalLength`) a spustil animáciu
+ * pridaním triedy `.kresli` — meranie po pripojení je spoľahlivé v každom prehliadači.
+ * @param {string} d - `d` atribút krivky segmentu.
+ * @param {SVGPathElement} halo - bodkovaný obrys (už vytvorený).
+ * @param {SVGPathElement} core - bodkové jadro (už vytvorené).
+ * @param {number} W - šírka javiska v px (na škálovanie šírky masky).
+ * @returns {{g: SVGGElement, maskaCiara: SVGPathElement}}
+ */
+function vytvorAnimovanuCestu(d, halo, core, W) {
+  var maskaCiara = document.createElementNS(SVG_NS, "path");
+  maskaCiara.setAttribute("d", d);
+  maskaCiara.setAttribute("class", "cesta-maska-ciara");
+  maskaCiara.setAttribute("fill", "none");
+  maskaCiara.setAttribute("stroke", "#fff");
+  // Maska musí byť aspoň taká hrubá ako halo, aby odkryla celé bodky (+ malá rezerva).
+  maskaCiara.setAttribute("stroke-width", HRUBKA_HALO_SIRKA * W * 1.6);
+  maskaCiara.setAttribute("stroke-linecap", "round");
+
+  var maska = document.createElementNS(SVG_NS, "mask");
+  var maskId = "cesta-odkryv";
+  maska.setAttribute("id", maskId);
+  maska.appendChild(maskaCiara);
+
+  var g = document.createElementNS(SVG_NS, "g");
+  g.appendChild(maska);
+  var obsah = document.createElementNS(SVG_NS, "g");
+  obsah.setAttribute("mask", "url(#" + maskId + ")");
+  obsah.appendChild(halo);
+  obsah.appendChild(core);
+  g.appendChild(obsah);
+  return { g: g, maskaCiara: maskaCiara };
+}
+
+/**
+ * Prekreslí všetkých 5 zastávok podľa aktuálneho stavu.
+ * @param {Object} stav - stav s poľom `dokonceneDni`.
+ * @param {boolean} [animujCestu] - animovať najnovší segment cesty (len po odomknutí dňa).
+ *   Pauza pred kreslením + samotné odkrytie sú v CSS (`.cesta-maska-ciara`), takže sa
+ *   prekreslením mapy (reset/ďalší deň) čisto zrušia bez JS časovača.
+ */
+function vykresliZastavky(stav, animujCestu) {
+  vykresliCestu(stav, animujCestu);
   var box = document.getElementById("zastavky");
   box.innerHTML = "";
   for (var i = 0; i < DNI.length; i++) {
@@ -680,7 +863,9 @@ function skusOdomknut() {
       if (stav.dokonceneDni === DNI.length) {
         spustiFinale();               // D5 → finálna sekvencia (sama prekreslí mapu s vlnou)
       } else {
-        vykresliZastavky(stav);       // D1–D4 → späť na mapu s novým symbolom
+        // Symbol je odhalený → mapa sa objaví so symbolom + starou cestou; najnovší
+        // segment cesty sa po krátkej pauze animovane nakreslí (v smere putovania).
+        vykresliZastavky(stav, true);
       }
     });
   } else {
@@ -705,6 +890,9 @@ var FINALE_OBRAZKY = {
 var KOD_TRUHLICE = "13177";           // číslice symbolov D1→D5 (zdroj: project_build_plan.md)
 var TRVANIE_VLNY_MS = 4200;           // 5 zastávok × 0,55 s rozostup + dosvit poslednej
 var TRVANIE_ZAVERECNEJ_MS = 9000;     // čas na prečítanie záverečných textov
+// Kým sa vo finále nakreslí posledná cesta (jaskyňa→Jeruzalem) — až potom svetelná vlna.
+// = pauza (0,7 s) + trvanie animácie (1,8 s) z `.cesta-maska-ciara` v style.css + malý dosvit.
+var TRVANIE_KRESLENIA_CESTY_MS = 2700;
 
 /*
   finaleFaza != null znamená „finále beží" (hodnota = aktuálna obrazovka).
@@ -746,14 +934,23 @@ function zavriFinale() {
 }
 
 /**
- * Obr.10 — finálna mapa: všetkých 5 symbolov + svetelná vlna D1→D5.
- * Spúšťa sa po odomknutí D5 aj klikom na dokončený Jeruzalem (replay).
+ * Obr.10 — finálna mapa. Najprv sa animovane dokreslí posledná cesta (jaskyňa→Jeruzalem),
+ * čím sa „dôjde" do cieľa; AŽ POTOM sa spustí svetelná vlna cez všetkých 5 symbolov.
+ * Spúšťa sa po odomknutí D5 aj klikom na dokončený Jeruzalem (replay — cesta sa nakreslí znova).
  */
 function spustiFinale() {
   if (finaleFaza !== null) return;    // už beží — druhé spustenie by rozbilo časovače
-  finaleFaza = "mapa";
+  finaleFaza = "kreslenie";           // podfáza pred vlnou: kreslí sa posledná cesta
   ukazObrazovku("obrazovka-mapa");
-  vykresliZastavky(nacitajStav());
+  vykresliZastavky(nacitajStav(), true);   // animuj poslednú cestu (D4→D5) v smere putovania
+  // Vlnu spusti až keď je cesta dokreslená (dovtedy len mapa so symbolmi + rastúca cesta).
+  finaleCasovace.push(window.setTimeout(spustiVlnu, TRVANIE_KRESLENIA_CESTY_MS));
+}
+
+/** Svetelná vlna cez všetkých 5 symbolov (whoosh). Volané po dokreslení poslednej cesty. */
+function spustiVlnu() {
+  zrusFinaleCasovace();
+  finaleFaza = "mapa";                 // teraz beží vlna — klik na mapu preskočí na záverečnú
   document.getElementById("zastavky").classList.add("vlna");
   prehraj("whoosh");                    // svišťanie v slučke počas celej svetelnej vlny
   finaleCasovace.push(window.setTimeout(ukazZaverecnu, TRVANIE_VLNY_MS));
@@ -875,7 +1072,13 @@ function start() {
   document.addEventListener("click", odomkniZvuk, { once: true });
 
   document.getElementById("tlacidlo-zacat")
-    .addEventListener("click", function () { ukazObrazovku("obrazovka-mapa"); });
+    .addEventListener("click", function () {
+      ukazObrazovku("obrazovka-mapa");
+      // Prekresli až keď je mapa VIDITEĽNÁ: pri štarte (start) beží render ešte na
+      // skrytej mape (getBoundingClientRect=0 → cesta sa neskráti/nenakreslí). Bez
+      // tohto by cesta chýbala až do prvého ďalšieho odomknutia.
+      vykresliZastavky(nacitajStav());
+    });
 
   document.getElementById("menu-tlacidlo").addEventListener("click", prepniMenu);
   document.getElementById("tlacidlo-reset").addEventListener("click", vynulujPostup);
@@ -902,9 +1105,10 @@ function start() {
   });
 
   // Finále: klik = ďalej (automatické kroky sa dajú preskočiť, ostatné vedie vedúci).
-  // Klik na mapu počas svetelnej vlny preskočí na záverečnú obrazovku.
+  // Počas kreslenia poslednej cesty preskočí klik rovno na vlnu; počas vlny na záverečnú.
   document.getElementById("obrazovka-mapa").addEventListener("click", function () {
-    if (finaleFaza === "mapa") ukazZaverecnu();
+    if (finaleFaza === "kreslenie") spustiVlnu();
+    else if (finaleFaza === "mapa") ukazZaverecnu();
   });
   document.getElementById("finale-zaverecna").addEventListener("click", ukazMystery);
   document.getElementById("mystery-totem").addEventListener("click", ukazSifru);
@@ -918,6 +1122,19 @@ function start() {
     if (sekvenciaHotovo) dokonciOdomknutie();
     else if (finaleFaza !== null) zavriFinale();
     else if (aktivnyIndex !== null) zavriHeslo();
+  });
+
+  // Zmena veľkosti okna: cesta sa počíta v px javiska, takže po preškálovaní treba
+  // segmenty prepočítať (inak vedú mimo kruhov). Prekresľujeme len keď je mapa
+  // viditeľná; bez animácie (nie je to odomknutie). Debounce, nech neprekresľuje pri
+  // každom pixeli ťahania okna.
+  var resizeCasovac = null;
+  window.addEventListener("resize", function () {
+    if (resizeCasovac) window.clearTimeout(resizeCasovac);
+    resizeCasovac = window.setTimeout(function () {
+      var mapaSkryta = document.getElementById("obrazovka-mapa").classList.contains("skryta");
+      if (!mapaSkryta) vykresliZastavky(nacitajStav());
+    }, 150);
   });
 
   obnovMenuZvuk();                      // text položky podľa uloženého stavu zvuku
