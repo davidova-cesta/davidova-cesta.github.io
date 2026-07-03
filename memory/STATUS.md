@@ -4,6 +4,16 @@ one Read call ingests it (move old detail to session notes when it grows)._
 
 ## Recent sessions (rolling window)
 
+- **S11 (2026-07-03)** — **Doladenie veľkostí/pozícií 5 symbolov na mape (pokračovanie S9)** (Jakub, prehliadač,
+  iteratívne). Len hodnoty v `DNI[].mapa{}` + `x/y` (žiadny zásah do pixelov, plne reverzibilné): **D1 Pastier**
+  kruh doprava+hore (`x:8→11, y:73→71`) lebo vyčnieval z mapy + postava menšia (`92%→86%`); **D2 Prak** menší
+  (`82%→74%`) — obsah ide od kraja po kraj štvorca, kruh orezával boky, zmenšenie ho usadilo do stredu bez orezu
+  kameňov; **D3 Jonatán** menší (`96%→82%`) — strom bol neprimerane väčší než ostatné; **D4 Jaskyňa** väčšia
+  (`96%→102%`, `overflow:hidden` rodiča oreže pretečenie — čisto vizuálne). D5 bez zmeny. **Farba praku** —
+  vyrobené 4 sýtostné varianty na porovnanie (scratchpad), Janka zvolila **ponechať originál** (bez zmeny pixelov).
+  Bod „spojovacia cesta medzi bodmi" (dizajnérsky návrh) **zaparkovaný do BACKLOG ako TASK MAPA.1** (pozor: postupné
+  odhaľovanie kvôli BR-003). Cold review (5 úloh, file:line artefakty): **0 defektov** — poradie D1–D5 nedotknuté,
+  žiadny spoiler. Otestované v prehliadači (Jakub, `dokonceneDni:5` test režim): všetkých 5 symbolov vyrovnaných.
 - **S10 (2026-07-03)** — **Fáza 7 — polish (`onerror` fallback pre `<img>`)** (Jakub, prehliadač). Nový helper
   `pripravFallbackObrazka(img)` v `app.js`: na `error` skryje `<img>` (`visibility:hidden` → neutrálny čierny
   podklad, žiadna rozbitá ikona na stene, žiadny spoiler BR-003), na `load` zas zobrazí (`visibility:""` →
@@ -127,7 +137,8 @@ one Read call ingests it (move old detail to session notes when it grows)._
   v `HLASITOSTI` (`app.js`). Pozn.: `cave`/whoosh boli slabé — riešiteľné len hlasnejším súborom (kód púšťa 1.0).
 - Assets present: `app_images/` — **5 symbolov mapy má od S9 nové vizuálne verzie** (staré originály ponechané, nedotknuté):
   D1 `PASTIER_chlapec.png` (orezaný chlapec+ovečka), D2 `PRAK_blizko.png` (prekomponovaný+sýtejší), D3 `JONATAN_sat.png`,
-  D4 `jask_sat.png`, D5 `JERUZALEM_sat.png` (sýtejšie). Napojené v `DNI[]` (single-source; `JERUZALEM_sat` sa cez
+  D4 `jask_sat.png`, D5 `JERUZALEM_sat.png` (sýtejšie). **Veľkosti na mape doladené S11** (`DNI[].mapa.velkost`):
+  D1 86 %, D2 74 %, D3 82 %, D4 102 %, D5 default. Napojené v `DNI[]` (single-source; `JERUZALEM_sat` sa cez
   `DNI[last].symbol` prejaví aj vo finálnej záverečnej obrazovke). Ďalej: (mapa, finále: `TOTEM.png`=obr.12,
   `SIFRA.png`=obr.13, `TRUHLICA.png`=obr.15 — všetky priehľadné PNG od S6; pergamen, pečať, svetlo, ODOMKNUTIE;
   „LOCK_*" sa NEpoužijú — odhaľujú symbol). BRS: jediný spec `BRS_fixed.docx`. Audit: viď `project_build_plan.md`.

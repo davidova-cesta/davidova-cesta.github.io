@@ -217,11 +217,11 @@ var STAV = {
   BRS uvádza „BOH VIDÍ TVOJE SRDCE" — appka používa „Hospodin hľadí na tvoje srdce".
 */
 var DNI = [
-  { id: "D1", nazov: "Pastier",   symbol: "app_images/PASTIER_chlapec.png",  heslo: "Hospodin hľadí na tvoje srdce", x: 8, y: 73,
+  { id: "D1", nazov: "Pastier",   symbol: "app_images/PASTIER_chlapec.png",  heslo: "Hospodin hľadí na tvoje srdce", x: 11, y: 71,
     zvuk: "birds",
     // Pastier: orezaný výrez len chlapca + ovečky pri pravej nohe (PASTIER_chlapec.png, bez
-    // stromu a stáda), centrovaný v kruhu (contain). Zväčšený tak, aby postava pekne vyplnila kruh.
-    mapa: { velkost: "92%", fit: "contain", posunX: "6%", posunY: "-6%" },
+    // stromu a stáda), centrovaný v kruhu (contain). Veľkosť zladená s jaskyňou (nie príliš veľký).
+    mapa: { velkost: "86%", fit: "contain", posunX: "6%", posunY: "-6%" },
     clue: [
       { text: "HOSPODIN", cx: 34, cy: 16 },
       { text: "TVOJE",    cx: 70, cy: 40 },
@@ -233,7 +233,8 @@ var DNI = [
     zvuk: "water",
     // Prak+kamene: prekomponované, prak a kamene priložené tesne k sebe (PRAK_blizko.png,
     // bez veľkej medzery) → väčšie a výraznejšie v kruhu. Contain, bez orezu, rámik ostáva.
-    mapa: { velkost: "82%", fit: "contain", orez: false },
+    // Zmenšený, aby sa prak+kamene zmestili do kruhu bez orezu bokov (obsah ide od kraja po kraj).
+    mapa: { velkost: "74%", fit: "contain", orez: false },
     clue: [
       { text: "A", cx: 28, cy: 16 },
       { text: "H", cx: 68, cy: 22 },
@@ -245,7 +246,8 @@ var DNI = [
   { id: "D3", nazov: "Jonatán",   symbol: "app_images/JONATAN_sat.png",  heslo: "PRIATEĽ MILUJE V KAŽDOM ČASE", x: 52, y: 30,
     zvuk: "leaves",
     // Jonatán (strom s lukom a tulcom): sýtejšia/kontrastnejšia verzia — výraznejší voči mape.
-    mapa: { velkost: "96%", fit: "contain", orez: false },
+    // Zmenšený vnútri kruhu, aby bol zladený s ostatnými symbolmi (najmä jaskyňou).
+    mapa: { velkost: "82%", fit: "contain", orez: false },
     clue: [
       { text: "MILUJE",  cx: 30, cy: 18 },
       { text: "PRIATEĽ", cx: 62, cy: 40 },
@@ -256,8 +258,8 @@ var DNI = [
   { id: "D4", nazov: "Jaskyňa",   symbol: "app_images/jask_sat.png",      heslo: "JASKYŇA", x: 70, y: 60,
     zvuk: "cave",
     // Jaskyňa: sýtejšia/kontrastnejšia verzia (jask_sat.png) — výraznejšia voči pozadiu mapy.
-    // Bez orezu, čo najväčšia (od okraja ku kraju zlatého kruhu bez vytŕčania). Rámik ostáva.
-    mapa: { velkost: "96%", fit: "contain", orez: false },
+    // Zväčšená, aby veľkostne sadla k ostatným (pozor: príliš veľké contain oreže boky kruhom).
+    mapa: { velkost: "102%", fit: "contain", orez: false },
     clue: [
       { text: "netopier",  cx: 32, cy: 16 },
       { text: "ozvena",    cx: 68, cy: 32 },
