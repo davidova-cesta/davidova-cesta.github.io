@@ -379,6 +379,26 @@ function vytvorMarker() {
 }
 
 /**
+ * Poistka proti nenačítanému obrázku (Fáza 7, EC — rozbitá ikona na stene).
+ * Ak sa `src` nepodarí načítať (chýbajúci súbor, iná veľkosť písmen na Pages),
+ * `<img>` sa SKRYJE → ostane neutrálny čierny podklad javiska/pergamenu, nikdy
+ * rozbitá ikona ani prázdny alt rámik. Žiadny náhradný obrázok/text → žiadny
+ * spoiler (BR-003). `onload` element zas zobrazí, aby striedané pozadia
+ * (`heslo-pozadie` pregamen↔ODOMKNUTIE) po jednej chybe nezhasli natrvalo.
+ * @param {HTMLImageElement} img - element, ktorý sa má chrániť.
+ */
+function pripravFallbackObrazka(img) {
+  if (!img) { return; }
+  img.addEventListener("error", function () { img.style.visibility = "hidden"; });
+  img.addEventListener("load", function () { img.style.visibility = ""; });
+  // Statický obrázok mohol zlyhať už PRED naviazaním poslucháča (event sa
+  // znova nespustí). complete && naturalWidth===0 = načítanie skončilo chybou.
+  if (img.getAttribute("src") && img.complete && img.naturalWidth === 0) {
+    img.style.visibility = "hidden";
+  }
+}
+
+/**
  * Aplikuje voliteľné per-deň doladenie symbolu na mape cez CSS premenné.
  * Bez `mapa` sa nič nenastaví → platí default z CSS (cover + kruh, veľkosť 86 %).
  * @param {HTMLImageElement} img - element symbolu.
@@ -411,6 +431,7 @@ function vytvorZastavku(den, stav, index) {
   if (stav === STAV.DOKONCENA) {
     var img = document.createElement("img");
     img.className = "symbol";
+    pripravFallbackObrazka(img);         // poistka pred priradením src (Fáza 7)
     img.src = den.symbol;
     img.alt = den.nazov;                 // názov smie byť v DOM len po dokončení
     nastavMapuSymbolu(img, den.mapa);    // voliteľné per-deň doladenie (veľkosť/orez/posun)
@@ -836,6 +857,15 @@ function vynulujPostup() {
 
 /** Naviazanie udalostí a prvé vykreslenie zo stavu. */
 function start() {
+  // Poistka rozbitých obrázkov (Fáza 7): každý statický <img> v tele appky
+  // dostane onerror/onload → pri nenačítaní sa skryje (neutrálny podklad, žiadna
+  // rozbitá ikona na stene). Kryje pozadia (INTRO/MAPA), pergameny aj cieľové
+  // <img>, ktorým app.js priradí src neskôr (symbol, finále). Symboly mapy sa
+  // tvoria dynamicky → chránené priamo vo vytvorZastavku. Robí sa RAZ na začiatku,
+  // poslucháče prežijú opakované zmeny src.
+  var obrazky = document.querySelectorAll(".stage img");
+  for (var oi = 0; oi < obrazky.length; oi++) { pripravFallbackObrazka(obrazky[oi]); }
+
   // Autoplay policy: harfa smie štartovať až po prvom geste vedúceho. Jednorazový
   // (once) poslucháč na celom dokumente → zafunguje nech je prvý klik kdekoľvek
   // (Začať, mapa, menu…) a už sa neopakuje (harfa sa nereštartuje). Zvuk je doplnok

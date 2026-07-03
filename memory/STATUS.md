@@ -4,6 +4,17 @@ one Read call ingests it (move old detail to session notes when it grows)._
 
 ## Recent sessions (rolling window)
 
+- **S10 (2026-07-03)** — **Fáza 7 — polish (`onerror` fallback pre `<img>`)** (Jakub, prehliadač). Nový helper
+  `pripravFallbackObrazka(img)` v `app.js`: na `error` skryje `<img>` (`visibility:hidden` → neutrálny čierny
+  podklad, žiadna rozbitá ikona na stene, žiadny spoiler BR-003), na `load` zas zobrazí (`visibility:""` →
+  striedané pozadia `heslo-pozadie` pregamen↔ODOMKNUTIE po jednej chybe nezhasnú natrvalo). Rieši aj
+  už-zlyhaný-pred-naviazaním prípad (`getAttribute("src") && complete && naturalWidth===0`). Naviazané RAZ v
+  `start()` na všetky `.stage img` (pozadia INTRO/MAPA, pergameny, dynamické ciele symbol/finále — tie nemajú
+  `src` v HTML → startup guard ich preskočí, `onload` ich neskôr zobrazí) + priamo na dynamický symbol mapy vo
+  `vytvorZastavku` (pred priradením `src`). `visibility` nie je nikde v `style.css` → žiadny konflikt s `.skryta`
+  (tá používa `display`, ortogonálne). Cold review (15 kat. + 4 rizikové trace): **0 reálnych defektov**.
+  Otestované v prehliadači (Jakub, premenovaný obrázok → čistý podklad namiesto rozbitej ikony). EC-katalóg
+  BRS (EC-001…010) po dohode neriešený ako neaplikovateľný na offline appku na stene.
 - **S9 (2026-07-02)** — **Vizuálne doladenie 5 symbolov na mape** (Jakub, prehliadač; iteratívne, mimo plánu —
   NIE Fáza 7). Pridaná **per-deň mechanika `mapa`** v `DNI[]` (`velkost`/`fit`/`orez`/`posunX`/`posunY`) → prepisuje
   vzhľad symbolu cez CSS premenné (`--sym-*`) novým helperom `nastavMapuSymbolu`; CSS default = staré správanie
@@ -98,8 +109,8 @@ one Read call ingests it (move old detail to session notes when it grows)._
 - ✅ Fáza 4 — odhalenie symbolu po odomknutí (zámok → symbol+názov na pergamene, prerušiteľné) (S5)
 - ✅ Fáza 5 — D5 finálna sekvencia (finálna mapa + záverečná + TOTEM + SIFRA + 13177 + truhlica) (S6)
 - ✅ Fáza 6 — zvuk (13 mp3 napojených + tichý fallback + menu „Vypnúť zvuk") (S8)
-- ⬜ Fáza 7 — polish (edge cases; napr. `onerror` fallback pre `<img>`) — NEXT
-- ⬜ Offline verification (open index.html with no internet)
+- ✅ Fáza 7 — polish (`onerror`/`onload` fallback pre `<img>` — rozbitá ikona sa skryje, žiadny spoiler) (S10)
+- ⬜ Fáza 8 — test: offline verification (TS-002, open index.html no internet) + generálka (TS-007) — NEXT
 - ⬜ Camp-ready hand-off to the leader
 
 ## System / data state

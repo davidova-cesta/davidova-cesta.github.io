@@ -20,6 +20,10 @@ a store — detail lives in STATUS.md and session notes. One line per session in
 ## Last session
 _Newest first. ONE line per session: outcome headline + (resume: next action) if paused._
 
+- **S10 (2026-07-03)** — **Fáza 7 — polish hotová** (Jakub, prehliadač). `onerror`/`onload` fallback pre `<img>`
+  (`pripravFallbackObrazka` v `app.js`): nenačítaný obrázok sa skryje na neutrálny podklad (žiadna rozbitá ikona
+  na stene, žiadny spoiler BR-003), `onload` ho zas zobrazí. Naviazané na `.stage img` + dynamický symbol mapy.
+  Cold review: 0 defektov. EC-katalóg BRS neriešený (neaplikovateľný). (resume: Fáza 8 — offline test TS-002 + generálka TS-007).
 - **S9 (2026-07-02)** — **Vizuálne doladenie 5 symbolov na mape** (Jakub, prehliadač; mimo plánu, nie Fáza 7).
   Nová per-deň mechanika `mapa{velkost/fit/orez/posunX/posunY}` v `DNI[]` → CSS premenné (`nastavMapuSymbolu`);
   `.zastavka` z `width:15%+aspect-ratio` na `15cqw×15cqw` (oprava elipsy); `.stav-dokoncena` maskuje `overflow:hidden`.
@@ -32,5 +36,3 @@ _Newest first. ONE line per session: outcome headline + (resume: next action) if
   nie loop), `mystery`+`tick` (loop) pri šifre, `celebration` fanfára pri truhlici. Menu „Vypnúť zvuk"
   (uložené v `davidovaCesta.zvuk`). Chýbajúci mp3 = ticho (EC-005). **Všetkých 13 mp3 dodaných.** 3× cold
   review: 0 reálnych defektov. (resume: Fáza 7 — polish, `onerror` fallback pre `<img>`).
-- **S7 (2026-07-02)** — **Zvukové assety pre Fázu 6 dodané** (bez kódu): 9 mp3 (ElevenLabs) do `audio/`.
-  `seal_crack.mp3` = ZMENA na zvuk odomknutia zámku (nie pečate, Janka OK). Fáza 6 odblokovaná.
