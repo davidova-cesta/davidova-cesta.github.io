@@ -15,7 +15,7 @@
    poľom — na rýchle preklikanie celého toku pri testovaní. Kým je zapnutý, na
    obrazovke svieti štítok „TEST" (poistka, aby sa nezabudol vypnúť na tábore).
    ========================================================================= */
-var TEST_REZIM_BEZ_HESIEL = true;
+var TEST_REZIM_BEZ_HESIEL = false;
 
 /* =========================================================================
    Zvuk (Fáza 6)
