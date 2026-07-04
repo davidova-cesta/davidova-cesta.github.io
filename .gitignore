@@ -21,9 +21,14 @@ logs/
 # OS / editor junk
 Thumbs.db
 Desktop.ini
+desktop.ini
 .DS_Store
 *.tmp
 ~$*
+
+# Ikona priecinka (lokalne zobrazenie vo Windows Prieskumnikovi, S17) — korunka
+# z INTRO. Nie je sucastou appky, len krasa priecinka na tomto stroji.
+Davidova-cesta.ico
 
 # BRS spec docs — kept LOCAL ONLY (contain camp location/dates/kids' ages).
 # The repo is public, so these must never be pushed. They stay on disk as the spec.
