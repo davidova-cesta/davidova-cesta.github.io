@@ -12,6 +12,9 @@ one Read call ingests it (move old detail to session notes when it grows)._
   preč. (4) **TS-002 offline test + TS-007 generálka PREŠLI** (Jakub, bez internetu, `file://`, reálne heslá
   vrátane testu bez diakritiky/preklepu/Enter/prázdneho poľa; celé finále + slučka harfy OK). Zo go-live
   checklistu ostáva LEN bod 4: hlasitosti doladiť na mieste (táborová aparatúra). Appka je go-live ready.
+  **(5) Repo presunuté** do novej organizácie: `davidova-cesta/davidova-cesta.github.io` → Pages beží na
+  čistej adrese **https://davidova-cesta.github.io/** (org vytvoril Jakub, presun cez API po CONFIRM;
+  stará Pages adresa jakubonovo-ai.github.io/app-davidova-cesta už NEfunguje — nikde nebola zdieľaná).
 - **S15 (2026-07-04)** — **Slávnostný zvuk `zaver` na záverečnej obrazovke finále** (Jakub, prehliadač; 1× cold
   review). Nový jednorazový zvuk (17. mp3, dodala Janka cez ElevenLabs, ~8 s, hlasitosť 1.0) hrá v `ukazZaverecnu`
   (Jeruzalem v zlate + „Dávidova cesta sa skončila…", harfa hrá ďalej pod ním); helper `zastavZaver()` ho stopne
@@ -175,8 +178,9 @@ one Read call ingests it (move old detail to session notes when it grows)._
   mapa = **prázdna `MAPA.jfif`** (postupné odhaľovanie). Prepnuté na **slovenčinu** (global aj
   projektový CLAUDE.md). **Zmazaný** zastaraný anglický BRS + opravené odkazy. App kód zatiaľ nie.
 - **S1 (2026-07-01)** — Agentic starter kit (lean adapted spine) + git + **public GitHub repo**
-  (github.com/jakubonovo-ai/app-davidova-cesta) + **GitHub Pages** na `main` →
-  https://jakubonovo-ai.github.io/app-davidova-cesta/ . BRS `.docx` **git-ignored** (repo je public).
+  (pôvodne github.com/jakubonovo-ai/app-davidova-cesta; **od S16 presunuté na
+  github.com/davidova-cesta/davidova-cesta.github.io**, Pages → https://davidova-cesta.github.io/)
+  + **GitHub Pages** na `main`. BRS `.docx` **git-ignored** (repo je public).
   _(Detaily S1 v git histórii commitu dd287de.)_
 
 ## Phase / milestone status
