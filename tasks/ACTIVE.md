@@ -8,11 +8,11 @@ Balík `Davidova-cesta.zip` (23,4 MB: index.html + app.js + style.css + navod.ht
 otestovaný z inej lokácie a **skopírovaný na USB** (Janka). Na mieste tábora (13.–17. júl 2026) ostáva
 už len doladiť **hlasitosti na aparatúre** (`HLASITOSTI` v `app.js`) — to nie je vývojová úloha.
 
-Žiadna otvorená vývojová úloha. Ďalší pick je voliteľná bezpečnostná drobnosť (viď NEXT).
+**Žiadna otvorená úloha.** 2FA na GitHub účte zapnuté (S17). Projekt je go-live pripravený a odovzdaný.
 
 ## NEXT (ordered next-pick queue)
-1. **(Voliteľné) Bezpečnosť účtu:** zapnúť 2FA na GitHub účte (manuálny krok, ~5 min,
-   github.com/settings/security). Odporučené v S16 security posudku. Nie je blokujúce pre tábor.
+_(prázdne — projekt dokončený a odovzdaný; ďalšia práca len ak príde nová požiadavka od Janky
+alebo poznatky z tábora 13.–17. júl 2026)_
 
 ## Recently shipped
 - **Hand-off vedúcemu H1–H4 (S17): HOTOVÝ.** H1 balík = čistý priečinok `Davidova-cesta` (4 runtime súbory +
