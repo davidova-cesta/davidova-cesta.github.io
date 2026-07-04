@@ -4,6 +4,15 @@ one Read call ingests it (move old detail to session notes when it grows)._
 
 ## Recent sessions (rolling window)
 
+- **S15 (2026-07-04)** — **Slávnostný zvuk `zaver` na záverečnej obrazovke finále** (Jakub, prehliadač; 1× cold
+  review). Nový jednorazový zvuk (17. mp3, dodala Janka cez ElevenLabs, ~8 s, hlasitosť 1.0) hrá v `ukazZaverecnu`
+  (Jeruzalem v zlate + „Dávidova cesta sa skončila…", harfa hrá ďalej pod ním); helper `zastavZaver()` ho stopne
+  pri prekliku na totem (`ukazMystery`) aj pri Escape/resete (`zavriFinale`) — neprelína sa s `mystery` tónom.
+  Fanfára truhlice (`celebration`, „jediná povolená fanfára" zo S8) ostala nedotknutá — Jakub schválil NOVÝ
+  odlíšený zvuk namiesto jej recyklácie. **Oprava z cold review:** `prepniZvuk` („Vypnúť zvuk") stlmoval len
+  harfu + prostredia — znejúci jednorazový efekt (zaver až 9 s naplno) by dohral nahlas; teraz sa hlasitosť
+  premieta na VŠETKY `<audio>` (`getElementsByTagName` + odrezanie prefixu `zvuk-`), čo zadarmo pokrylo aj
+  whoosh/tick/mystery/celebration. Otestované v prehliadači (Jakub): finále + stopnutie + stlmenie OK.
 - **S14 (2026-07-04)** — **Dramaturgia večera (poradie animácií + zvuky) + TEST režim** (Jakub, prehliadač,
   iteratívne; 3× cold review). **(1) Nové poradie po odomknutí:** symbol → cesta → AŽ POTOM ožije ďalší bod
   (trieda `.cesta-kresli` na `#zastavky`; časovanie výhradne CSS, bez JS časovačov). **(2) Cesta vedie až k práve
@@ -178,6 +187,7 @@ one Read call ingests it (move old detail to session notes when it grows)._
   UI ovládanie (burger → 2 ikonky vpravo dole: reset + zvuk) (S13)
 - ✅ Dramaturgia večera — poradie symbol→cesta→prebudenie bodu, cesta k aktívnemu bodu, finále s nádychom,
   zvuky kroky+pergamen, pergamen fade (S14)
+- ✅ Slávnostný zvuk `zaver` na záverečnej obrazovke finále + oprava „Vypnúť zvuk" na všetky zvuky (S15)
 - ⬜ Fáza 8 — test: offline verification (TS-002) + generálka (TS-007 s REÁLNYMI heslami) + go-live checklist
   (vypnúť TEST režim!) — NEXT
 - ⬜ Camp-ready hand-off to the leader
@@ -198,9 +208,10 @@ one Read call ingests it (move old detail to session notes when it grows)._
 - **⚠ TEST režim (S14):** `TEST_REZIM_BEZ_HESIEL=true` v `app.js` — heslá vypnuté na testovanie, na
   obrazovke štítok „TEST". **Go-live vyžaduje prepnúť na false** (karta v ACTIVE.md).
 - Tests: none yet.
-- Assets present: `audio/` — **16 mp3** (S8 dodal 13, S13 pridal `sheep` + vymenil `cave`, **S14 pridal
-  `kroky` + `pergamen`**: kroky = putovanie pri kreslení cesty cez `animationstart`, 0.9; pergamen =
-  rozbalenie pri otvorení clue + zrolovanie pri zatvorení, 0.8). Prostredie sa
+- Assets present: `audio/` — **17 mp3** (S8 dodal 13, S13 pridal `sheep` + vymenil `cave`, S14 pridal
+  `kroky` + `pergamen`: kroky = putovanie pri kreslení cesty cez `animationstart`, 0.9; pergamen =
+  rozbalenie pri otvorení clue + zrolovanie pri zatvorení, 0.8; **S15 pridal `zaver`** = slávnostné
+  vyvrcholenie na záverečnej obrazovke finále, 1.0, stop pri prechode na totem/Escape/resete). Prostredie sa
   od **S13** už NEspúšťa pri clue, ale **až po odhalení symbolu** (`light_reveal`) a hrá do zavretia pergamenu;
   na konci **jemný fade-out** (`fadeOutProstredia`, 800 ms) pred návratom harfy (preskočenie vedúcim = okamžite).
   Zvuky prostredia dní: **D1 `birds`+`sheep` (spolu — pole)**, **D2 `wind`** (S13: z `water`), D3 `leaves`,

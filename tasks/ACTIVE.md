@@ -22,6 +22,9 @@ bootstrap. NOT a history log — shipped cards leave here entirely._
 2. Camp-ready hand-off vedúcemu (súbory na priame otvorenie `index.html` + krátky návod).
 
 ## Recently shipped
+- Slávnostný zvuk `zaver` na záverečnej obrazovke finále (S15): hrá pri Jeruzaleme v zlate, stopne sa
+  pri prekliku na totem/Escape/resete; oprava „Vypnúť zvuk" — stlmenie sa teraz premietne na VŠETKY
+  zvuky vrátane znejúcich jednorazových. `zaver.mp3` dodala Janka, otestované (Jakub).
 - Dramaturgia večera (S14): poradie symbol→cesta→prebudenie ďalšieho bodu; cesta vedie k blikajúcemu
   bodu (BR-003 reinterpretácia, Jakub OK); finále bez re-kreslenia (nádych→whoosh); zvuky kroky+pergamen;
   pergamen mizne fadeom (obsah zamrznutý, oprava prekliku); TEST režim bez hesiel (⚠ viď checklist v NOW).

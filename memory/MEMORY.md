@@ -20,6 +20,10 @@ a store — detail lives in STATUS.md and session notes. One line per session in
 ## Last session
 _Newest first. ONE line per session: outcome headline + (resume: next action) if paused._
 
+- **S15 (2026-07-04)** — **Slávnostný zvuk `zaver` na záverečnej obrazovke finále** (17. mp3, dodala Janka; hrá pri
+  Jeruzaleme v zlate, stop pri prekliku/Escape/resete) + oprava „Vypnúť zvuk" — stlmenie sa premietne na VŠETKY
+  `<audio>` (aj znejúce jednorazové). 1× cold review, otestované (Jakub). (resume: Fáza 8 — offline TS-002 + generálka
+  TS-007 s reálnymi heslami; ⚠ TEST režim stále zapnutý.)
 - **S14 (2026-07-04)** — **Dramaturgia večera + 2 nové zvuky + TEST režim** (Jakub, prehliadač, iteratívne). Nové poradie:
   symbol → cesta putuje **až k blikajúcemu bodu** (BR-003 reinterpretácia, Jakub OK — bod polohu aj tak ukazuje) → bod sa
   **prebudí** (maskovaný ako zamknutý `zamok-kryt`, po príchode cesty záblesk+pulz). Finále bez re-kreslenia cesty (nádych
@@ -28,4 +32,3 @@ _Newest first. ONE line per session: outcome headline + (resume: next action) if
   (heslá vypnuté + štítok) — **pred go-live prepnúť na false!** 3× cold review. (resume: Fáza 8 — offline TS-002 + generálka TS-007 s reálnymi heslami).
 - **S13 (2026-07-03)** — **Zvuk — úprava správania + UI**: prostredie po odhalení symbolu (fade-out na harfu), D2 wind,
   D1 ovce+vtáky (pole), burger → 2 ikonky vpravo dole. 3× cold review: 0 defektov. Detail v STATUS.md.
-- **S10 (2026-07-03)** — Fáza 7 — `onerror`/`onload` fallback pre `<img>` (žiadna rozbitá ikona/spoiler). Detail v STATUS.md.

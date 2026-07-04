@@ -52,7 +52,8 @@ var HLASITOSTI = {
   mystery: 0.9,
   tick: 0.8,            // tikanie počas lúštenia šifry
   kroky: 0.9,           // putovanie počas kreslenia cesty (mäkký zvuk, nech ho vidno nad harfou)
-  pergamen: 0.8         // rozbalenie zvitku (otvorenie clue) + zrolovanie (zatvorenie)
+  pergamen: 0.8,        // rozbalenie zvitku (otvorenie clue) + zrolovanie (zatvorenie)
+  zaver: 1.0            // slávnostné vyvrcholenie na záverečnej obrazovke — naplno, nech vynikne nad harfou
 };
 
 /* Ambient smie hrať až po prvom geste vedúceho. Kým je false, prehraj() efekty
@@ -198,6 +199,11 @@ function zastavTikanie() {
   zastavZvuk("tick");
 }
 
+/** Zastaví slávnostný zvuk záverečnej (pri prechode na totem alebo ukončení finále). */
+function zastavZaver() {
+  zastavZvuk("zaver");
+}
+
 /* Znížená hlasitosť harfy počas clue + zadávania hesla — jemnejší podklad, nech dlhé
    lúštenie neruší. Pretrváva od otvorClue až po odomknutie/zavretie pergamenu. */
 var HLASITOST_HARFY_CLUE = 0.20;
@@ -251,9 +257,11 @@ function prepniZvuk() {
   } catch (e) {
     // úložisko blokované → aspoň v tomto behu platí premenná
   }
-  nastavHlasitost("ambient");           // okamžite premietni na hrajúcu harfu
-  for (var i = 0; i < zvukyProstrediaHraju.length; i++) {
-    nastavHlasitost(zvukyProstrediaHraju[i]);   // aj na všetky bežiace prostredia
+  // Okamžite premietni na VŠETKY <audio> (harfa, prostredia, aj práve znejúce
+  // jednorazové efekty — napr. 9 s „zaver" by inak po stlmení dohral nahlas).
+  var vsetkyAudio = document.getElementsByTagName("audio");
+  for (var i = 0; i < vsetkyAudio.length; i++) {
+    nastavHlasitost(vsetkyAudio[i].id.replace("zvuk-", ""));
   }
   if (!zvukVypnuty) odomkniZvuk();      // zapnutie z menu ráta ako gesto → rozohrá harfu
   obnovMenuZvuk();
@@ -1096,6 +1104,7 @@ function zavriFinale() {
   zrusFinaleCasovace();
   zastavVlnu();                         // istota: ak sa finále ukončí počas vlny, whoosh doznie
   zastavTikanie();                      // istota: ak sa ukončí počas šifry, tikanie doznie
+  zastavZaver();                        // istota: ak sa ukončí počas záverečnej, slávnostný zvuk doznie
   finaleFaza = null;
   skryFinaleObaly();
   document.getElementById("zastavky").classList.remove("vlna");
@@ -1135,12 +1144,14 @@ function ukazZaverecnu() {
   // Jeruzalem je v tejto chvíli vždy odomknutý — symbol už nie je spoiler
   document.getElementById("zaverecna-obr").src = DNI[DNI.length - 1].symbol;
   document.getElementById("finale-zaverecna").classList.remove("skryta");
+  prehraj("zaver");                     // slávnostné vyvrcholenie — Jeruzalem v zlate (harfa hrá ďalej pod ním)
   finaleCasovace.push(window.setTimeout(ukazMystery, TRVANIE_ZAVERECNEJ_MS));
 }
 
 /** Obr.12 — mystery circle: čaká na klik vedúceho na otáznik (žiadny časovač). */
 function ukazMystery() {
   zrusFinaleCasovace();
+  zastavZaver();                       // istota: klik vedúceho počas znejúceho záveru → nech sa nebije s mystery
   finaleFaza = "mystery";
   skryFinaleObaly();
   document.getElementById("mystery-obr").src = FINALE_OBRAZKY.totem;
