@@ -20,9 +20,6 @@ Zadanie H0 uzavreté (S16): stroj tábora = TENTO MSI notebook (Jankin); návod 
 1. Hand-off H1–H4 — viď NOW.
 2. **Bezpečnosť účtu:** zapnúť 2FA na GitHub účte `jakubonovo-ai` (manuálny krok, ~5 min,
    github.com/settings/security). Odporučené v S16 security posudku.
-3. _(čaká na CONFIRM v S16)_ Prepis git histórie — odstrániť súkromný e-mail
-  `jakub.novotny@gmail.com` z autorstva ~27 commitov + force push (jediné miesto, kde e-mail
-  verejne žije; nové commity už idú z noreply adresy — git config zmenený v S16).
 
 ## Recently shipped
 - **Fáza 8 — testovanie + go-live (S16):** offline audit čistý (0 sieťových odkazov; 12 obrázkov +
