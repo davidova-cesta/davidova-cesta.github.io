@@ -2,8 +2,18 @@
 _The ONE task this session is doing, plus the ordered next-pick queue. Read on
 bootstrap. NOT a history log — shipped cards leave here entirely._
 
+## IN PROGRESS — resume thread
+**H2 návod: hotový, čaká na Jakubovo schválenie v prehliadači.**
+- **Čo urobené (S17):** `navod.html` vytvorený (jedna A4, po slovensky, tlač cez Ctrl+P), git-ignored kvôli
+  spoileru (heslá). Fakty overené z kódu + cold review 0 defektov.
+- **Kde sme zastali:** Jakub má návod otvoriť dvojklikom na `navod.html`, skontrolovať obsah + náhľad tlače
+  (Ctrl+P), a povedať čo upraviť / že je OK. Zvlášť: over WA/Messenger náhľad cez `?x=1` (Pages deploy
+  opravený v S17 — thumbnail teraz 200).
+- **Ďalší konkrétny krok:** po Jakubovom OK → (1) doplniť prepis rolí na Janku (majiteľka/prevádzkovateľka) do
+  STATUS.md „Open decisions" + tam kde treba; (2) pokračovať H1 (balík/ZIP), H3 (generálka), H4 (odovzdanie).
+
 ## NOW
-**Hand-off vedúcemu — fázy H1–H4 (začať v novej session).**
+**Hand-off vedúcemu — fázy H1–H4 (H2 návod rozrobený, viď resume thread hore).**
 Zadanie H0 uzavreté (S16): stroj tábora = TENTO MSI notebook (Jankin); návod = tlačiteľná A4
 + súbor v balíku; distribúcia = e-mail/cloud vopred + USB záloha.
 - **H1 — balík:** čistý priečinok len s runtime súbormi (`index.html`, `app.js`, `style.css`,

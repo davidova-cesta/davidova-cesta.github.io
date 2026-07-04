@@ -21,6 +21,14 @@ a store — detail lives in STATUS.md and session notes. One line per session in
 ## Last session
 _Newest first. ONE line per session: outcome headline + (resume: next action) if paused._
 
+- **S17 (2026-07-04)** — **Hand-off H2 časť: tlačiteľný návod + oprava thumbnailu/Pages.** (1) `navod.html` —
+  jedna A4, po slovensky (spustenie, tabuľka 5 hesiel+indícií, ovládanie, riešenie problémov, varovanie pred
+  resetom); **git-ignored** (obsahuje heslá = spoiler, NESMIE na public GitHub). (2) **Thumbnail nefungoval** —
+  príčina: po presune repa do org sa **Pages deploy rozbil** (3 buildy errored/cancelled, nasadený ostal starý
+  `de67911` bez obrázka → og-nahlad.jpg 404). Oprava: vyžiadaný build cez API (`POST .../pages/builds`) →
+  postavil najnovší `99a6955`, obrázok teraz 200. **Prevádzkový nález:** GitHub Pages sa po presune repa
+  neopravil sám — pri budúcom zaseknutom deployi reštartnúť build cez API. Kód appky nezmenený. (resume: Jakub
+  schváli návod v prehliadači + over WA náhľad cez `?x=1` → potom prepis rolí na Janku + zvyšok H1/H3/H4.)
 - **S16 (2026-07-04)** — **Fáza 8 HOTOVÁ (TS-002+TS-007 prešli, TEST režim vypnutý) + pushnuté (public prijaté)
   + repo presunuté na `davidova-cesta/davidova-cesta.github.io`** (Pages: davidova-cesta.github.io). Security
   posudok: jediné reálne riziká = spoilery v public repe (prijaté), táborové údaje v docs (prijaté, mená OK),
@@ -29,5 +37,3 @@ _Newest first. ONE line per session: outcome headline + (resume: next action) if
   hashe commitov sa zmenili — staré odkazy v docs sú len historické). (resume: nová session → hand-off H1.)
 - **S15 (2026-07-04)** — **Slávnostný zvuk `zaver` na záverečnej obrazovke finále** (17. mp3, dodala Janka; hrá pri
   Jeruzaleme v zlate, stop pri prekliku/Escape/resete) + oprava „Vypnúť zvuk" — stlmenie na VŠETKY `<audio>`.
-- **S14 (2026-07-04)** — **Dramaturgia večera + zvuky kroky/pergamen + TEST režim** (od S16 vypnutý). Poradie:
-  symbol → cesta k blikajúcemu bodu (BR-003 reinterpretácia, Jakub OK) → prebudenie bodu. Detail v STATUS.md.

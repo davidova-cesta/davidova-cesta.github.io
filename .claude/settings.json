@@ -1,4 +1,5 @@
 {
+  "availableModels": ["sonnet", "opus", "haiku"],
   "permissions": {
     "allow": [],
     "deny": [

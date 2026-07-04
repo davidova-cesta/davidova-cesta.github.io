@@ -4,6 +4,21 @@ one Read call ingests it (move old detail to session notes when it grows)._
 
 ## Recent sessions (rolling window)
 
+- **S17 (2026-07-04)** — **Hand-off H2 (časť): tlačiteľný návod pre vedúceho.** Vytvorený `navod.html` — jedna A4,
+  po slovensky, na tlač cez prehliadač (Ctrl+P). Obsah: (1) spustenie appky (dvojklik na `index.html`, F11 =
+  projektor, offline), (2) ako funguje večer (postupné odomykanie, deň sa nepreskočí), (3) **tabuľka 5 hesiel +
+  indícií** (tajné), (4) ovládanie (klik / Enter=odomknúť / Escape=preskočiť; dve ikonky vpravo dole: reset ↻ +
+  zvuk 🔊), (5) riešenie problémov (najmä „zvuk až po prvom kliknutí = nie je chyba"), (6) box-varovanie pred
+  RESET ikonkou (maže postup). **Spoiler-poistka:** `navod.html` pridaný do `.gitignore` — obsahuje heslá =
+  spoiler pre deti, NESMIE na public GitHub (overené `git check-ignore`). Fakty (heslá, clue, ovládanie, kód
+  13177, offline, localStorage) overené priamo z `app.js`/`index.html`, nie z pamäte. **Cold review (10 bodov,
+  file:line artefakty): 0 defektov.** Rola „vlastníčka/prevádzkovateľka: Janka" už v päte návodu (H2 druhá časť
+  — prepis rolí do STATUS/ACTIVE ešte OTVORENÝ, čaká na Jakubovo schválenie návodu). **Kód appky NEZMENENÝ.**
+  **(Popri návode oprava Pages/thumbnailu:** po presune repa do org sa Pages deploy rozbil — 3 buildy
+  errored/cancelled, nasadený ostal starý `de67911` bez obrázka → `og-nahlad.jpg` vracal 404. Oprava:
+  vyžiadaný build cez API `POST .../pages/builds` → postavil najnovší `99a6955`, obrázok teraz 200.
+  **Prevádzkový nález:** GitHub Pages sa po presune repa neopravil sám — pri budúcom zaseknutom deployi
+  reštartnúť build cez API.)
 - **S16 (2026-07-04)** — **Fáza 8 — testovanie + go-live: HOTOVÁ.** (1) Kódový offline audit čistý: žiadny
   sieťový odkaz (jediné http = SVG namespace konštanty), všetkých 12 obrázkov + 17 mp3 v kóde sedí s diskom
   presne aj veľkosťou písmen (Pages-safe). (2) Overená normalizácia hesla (`normalizujHeslo`, app.js:436):

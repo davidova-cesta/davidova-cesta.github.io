@@ -31,4 +31,9 @@ BRS_fixed.docx
 DavidovaCesta_Enterprise_BRS_v1.0.docx
 *.docx
 
+# Leader's printable manual — contains ALL 5 passwords (spoiler for kids).
+# The repo is public, so this must NEVER be pushed. It lives on disk + in the
+# hand-off ZIP for Janka only.
+navod.html
+
 # NOTE: app_images/ IS tracked — it's the app's artwork and not sensitive.
