@@ -15,6 +15,15 @@ one Read call ingests it (move old detail to session notes when it grows)._
   **(5) Repo presunuté** do novej organizácie: `davidova-cesta/davidova-cesta.github.io` → Pages beží na
   čistej adrese **https://davidova-cesta.github.io/** (org vytvoril Jakub, presun cez API po CONFIRM;
   stará Pages adresa jakubonovo-ai.github.io/app-davidova-cesta už NEfunguje — nikde nebola zdieľaná).
+  **(6) Security posudok (na Jakubovu žiadosť):** statická appka bez servera/dát = klasický hacking nemá cieľ;
+  reálne riziká: spoilery v public repe (prijaté S16), táborové údaje v pracovných docs (prijaté — mená
+  Jakub/Janka smú byť verejné, rozhodol Jakub), súkromný e-mail `jakub.novotny@gmail.com` v git autorstve
+  (JEDINÉ miesto kde žije; nové commity od S16 idú z noreply — `git config user.email` zmenený; prepis
+  histórie čaká na CONFIRM), odporučené 2FA (karta v ACTIVE). **(7) OG náhľad pre WhatsApp/Messenger:**
+  `app_images/og-nahlad.jpg` (1200×630, 227 kB, z INTRO.png cez Pillow) + Open Graph meta v `index.html`
+  (absolútna URL na Pages; nespoilerový obsah). **(8) Hand-off H0 uzavreté:** stroj tábora = tento MSI
+  (Jankin), návod A4+súbor, distribúcia e-mail/cloud+USB; H1–H4 zakartované v ACTIVE. **(9) Rozhodnuté:**
+  projekt sa dokumentačne prepíše na Janku (roly; historické záznamy sa NEprepisujú) — súčasť H2.
 - **S15 (2026-07-04)** — **Slávnostný zvuk `zaver` na záverečnej obrazovke finále** (Jakub, prehliadač; 1× cold
   review). Nový jednorazový zvuk (17. mp3, dodala Janka cez ElevenLabs, ~8 s, hlasitosť 1.0) hrá v `ukazZaverecnu`
   (Jeruzalem v zlate + „Dávidova cesta sa skončila…", harfa hrá ďalej pod ním); helper `zastavZaver()` ho stopne

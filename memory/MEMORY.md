@@ -21,10 +21,12 @@ a store — detail lives in STATUS.md and session notes. One line per session in
 ## Last session
 _Newest first. ONE line per session: outcome headline + (resume: next action) if paused._
 
-- **S16 (2026-07-04)** — **Fáza 8 HOTOVÁ: appka je go-live ready.** Offline audit čistý (0 sieťových odkazov,
-  assets case-match), TEST režim vypnutý (`2e3d13c`), TS-002 offline + TS-007 generálka s reálnymi heslami
-  prešli (Jakub). Ostáva: hand-off vedúcemu + hlasitosti na mieste. (resume: rozhodnúť push/public-vs-private
-  — heslá sú v `app.js` a repo je public; 22 commitov nepushnutých.)
+- **S16 (2026-07-04)** — **Fáza 8 HOTOVÁ (TS-002+TS-007 prešli, TEST režim vypnutý) + pushnuté (public prijaté)
+  + repo presunuté na `davidova-cesta/davidova-cesta.github.io`** (Pages: davidova-cesta.github.io). Security
+  posudok: jediné reálne riziká = spoilery v public repe (prijaté), táborové údaje v docs (prijaté, mená OK),
+  e-mail v git autorstve (odstraňuje sa) + odporučené 2FA. OG náhľad pre WA/Messenger (`og-nahlad.jpg` 1200×630).
+  Hand-off H0 uzavreté, H1–H4 zakartované. (resume: CONFIRM na prepis git histórie bez e-mailu + force push;
+  potom nová session → hand-off H1.)
 - **S15 (2026-07-04)** — **Slávnostný zvuk `zaver` na záverečnej obrazovke finále** (17. mp3, dodala Janka; hrá pri
   Jeruzaleme v zlate, stop pri prekliku/Escape/resete) + oprava „Vypnúť zvuk" — stlmenie na VŠETKY `<audio>`.
 - **S14 (2026-07-04)** — **Dramaturgia večera + zvuky kroky/pergamen + TEST režim** (od S16 vypnutý). Poradie:

@@ -3,17 +3,26 @@ _The ONE task this session is doing, plus the ordered next-pick queue. Read on
 bootstrap. NOT a history log — shipped cards leave here entirely._
 
 ## NOW
-**Camp-ready hand-off vedúcemu.**
-- Súbory na priame otvorenie `index.html` (offline balík — celý priečinok, nie len jeden súbor)
-  + krátky návod pre vedúceho (ovládanie: klik, Escape, reset, zvuk; heslá dní).
-- Na mieste (tábor): doladiť hlasitosti na projektorovej aparatúre — všetko v `HLASITOSTI`
-  (`app.js`); posledný zvyšný bod go-live checklistu zo S14.
-- ~~Rozhodnutie push/public~~ **VYRIEŠENÉ (S16, Jakub):** repo ostáva PUBLIC, všetko pushnuté
-  na GitHub (`13ba891`) — Pages funguje ako záložná online verzia; riziko čitateľných hesiel
-  prijaté (offline tábor, deti 6–11).
+**Hand-off vedúcemu — fázy H1–H4 (začať v novej session).**
+Zadanie H0 uzavreté (S16): stroj tábora = TENTO MSI notebook (Jankin); návod = tlačiteľná A4
++ súbor v balíku; distribúcia = e-mail/cloud vopred + USB záloha.
+- **H1 — balík:** čistý priečinok len s runtime súbormi (`index.html`, `app.js`, `style.css`,
+  `app_images/`, `audio/`) bez pracovných dokumentov; z neho ZIP. Kritérium: funguje offline
+  z iného miesta na disku.
+- **H2 — návod A4 (po slovensky):** spustenie, tabuľka hesiel, ovládanie (klik/Enter/Escape,
+  ikonky reset+zvuk), riešenie problémov („zvuk až po prvom kliknutí" nie je chyba). Súčasť:
+  prepis rolí na Janku (majiteľka/prevádzkovateľka — rozhodnuté S16; historické záznamy sessions
+  sa NEprepisujú, mená Jakub/Janka smú ostať aj verejne — rozhodnuté S16).
+- **H3 — generálka odovzdania:** rozbaliť ZIP inde + prejsť D1 len podľa návodu.
+- **H4 — odovzdanie + uzávierka** (na mieste tábora ešte: hlasitosti na aparatúre — `HLASITOSTI`).
 
 ## NEXT (ordered next-pick queue)
-1. Camp-ready hand-off — viď NOW.
+1. Hand-off H1–H4 — viď NOW.
+2. **Bezpečnosť účtu:** zapnúť 2FA na GitHub účte `jakubonovo-ai` (manuálny krok, ~5 min,
+   github.com/settings/security). Odporučené v S16 security posudku.
+3. _(čaká na CONFIRM v S16)_ Prepis git histórie — odstrániť súkromný e-mail
+  `jakub.novotny@gmail.com` z autorstva ~27 commitov + force push (jediné miesto, kde e-mail
+  verejne žije; nové commity už idú z noreply adresy — git config zmenený v S16).
 
 ## Recently shipped
 - **Fáza 8 — testovanie + go-live (S16):** offline audit čistý (0 sieťových odkazov; 12 obrázkov +

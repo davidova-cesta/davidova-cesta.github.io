@@ -4,6 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dávidova cesta</title>
+  <!-- Náhľad pri zdieľaní linku (WhatsApp/Messenger čítajú Open Graph značky).
+       og:image musí byť ABSOLÚTNA adresa — messengery relatívnu cestu nevyriešia.
+       Obsah náhľadu je zámerne nespoilerový (len intro grafika + názov). -->
+  <meta name="description" content="Dobrodružstvo s Dávidom — večerný príbeh táborovej cesty." />
+  <meta property="og:title" content="Dávidova cesta" />
+  <meta property="og:description" content="Dobrodružstvo s Dávidom — večerný príbeh táborovej cesty." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://davidova-cesta.github.io/" />
+  <meta property="og:image" content="https://davidova-cesta.github.io/app_images/og-nahlad.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
   <!-- Klasický <link> (žiadne moduly) — appka musí bežať z file:// bez servera -->
   <link rel="stylesheet" href="style.css" />
 </head>
