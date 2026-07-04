@@ -26,6 +26,13 @@ one Read call ingests it (move old detail to session notes when it grows)._
   `~/.claude/CLAUDE.md` — mimo repa):** Janka = DEFAULT vlastníčka VŠETKÝCH projektov; Jakub platí len keď
   repo výslovne uvedie „Owner: Jakub" (samostatná Jakubova sekcia dole). Spoločné technické pravidlá
   (kódovanie/nástroje/bezpečnosť/štýl) nezmenené pre oboch.
+  **(Hand-off H1–H4 DOKONČENÝ:)** H1 = balík `Davidova-cesta` zložený v scratchpade (mimo repa): 4 runtime
+  súbory (`index.html`/`app.js`/`style.css`/`navod.html`) + **presne 13 reálne používaných obrázkov**
+  (audit všetkých `app_images/` referencií v `index.html`+`app.js`+`style.css`; CSS nemá `url()`, audio len
+  cez `<audio src>`) + 17 mp3. Vynechané nepoužité originály/`.jfif`/LOCK_*/ChatGPT rezervy. H3 generálka:
+  strojovo 30/30 lokálnych referencií má súbor v balíku (žiadny čierny podklad — BR-003), offline audit
+  balíka čistý, ZIP (23,4 MB) rozbalený v inej lokácii = kompletný, **vizuálna generálka D1 prešla (Janka)**.
+  H4: ZIP **skopírovaný na USB**. Balík je distribučný artefakt — zámerne NIE v git repe.
 - **S16 (2026-07-04)** — **Fáza 8 — testovanie + go-live: HOTOVÁ.** (1) Kódový offline audit čistý: žiadny
   sieťový odkaz (jediné http = SVG namespace konštanty), všetkých 12 obrázkov + 17 mp3 v kóde sedí s diskom
   presne aj veľkosťou písmen (Pages-safe). (2) Overená normalizácia hesla (`normalizujHeslo`, app.js:436):
@@ -233,7 +240,9 @@ one Read call ingests it (move old detail to session notes when it grows)._
 - ✅ Slávnostný zvuk `zaver` na záverečnej obrazovke finále + oprava „Vypnúť zvuk" na všetky zvuky (S15)
 - ✅ Fáza 8 — test: offline audit (0 sieťových odkazov, case-match assets), TEST režim vypnutý, TS-002
   offline + TS-007 generálka s reálnymi heslami prešli (S16)
-- ⬜ Camp-ready hand-off to the leader (súbory + krátky návod; hlasitosti sa doladia na mieste) — NEXT
+- ✅ Camp-ready hand-off to the leader (S17): návod A4 (`navod.html`) + balík `Davidova-cesta.zip`
+  (runtime súbory + 13 obrázkov + 17 mp3), otestovaný z inej lokácie + **skopírovaný na USB**. Na mieste
+  tábora ostáva len doladenie hlasitostí (`HLASITOSTI`) — nie vývojová úloha. **Appka je odovzdaná.**
 
 ## System / data state
 

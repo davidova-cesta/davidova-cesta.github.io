@@ -2,39 +2,26 @@
 _The ONE task this session is doing, plus the ordered next-pick queue. Read on
 bootstrap. NOT a history log — shipped cards leave here entirely._
 
-## IN PROGRESS — resume thread
-**H2 návod: hotový, čaká na schválenie v prehliadači (Janka).**
-- **Čo urobené (S17):** `navod.html` vytvorený (jedna A4, po slovensky, tlač cez Ctrl+P), git-ignored kvôli
-  spoileru (heslá). Fakty overené z kódu + cold review 0 defektov. **Prepis rolí na Janku HOTOVÝ (S17):**
-  Janka = jediná rola (vlastníčka/prevádzka/obsah/vývoj), komunikácia s Jankou; Jakub mimo aktívnych rolí,
-  ostáva len v historických záznamoch. Zmenené: `CLAUDE.md` (hlavička rolí + „WAIT for Janka" + komunikácia +
-  „bez Jankinho potvrdenia") a `project_build_plan.md` (vzorku ukázať Janke). STATUS.md historické záznamy
-  zámerne NEdotknuté.
-- **Kde sme zastali:** návod treba otvoriť dvojklikom na `navod.html`, skontrolovať obsah + náhľad tlače
-  (Ctrl+P), a povedať čo upraviť / že je OK. Zvlášť: over WA/Messenger náhľad cez `?x=1` (Pages deploy
-  opravený v S17 — thumbnail teraz 200).
-- **Ďalší konkrétny krok:** po schválení návodu → pokračovať H1 (balík/ZIP), H3 (generálka), H4 (odovzdanie).
-
 ## NOW
-**Hand-off vedúcemu — fázy H1–H4 (H2 návod rozrobený, viď resume thread hore).**
-Zadanie H0 uzavreté (S16): stroj tábora = TENTO MSI notebook (Jankin); návod = tlačiteľná A4
-+ súbor v balíku; distribúcia = e-mail/cloud vopred + USB záloha.
-- **H1 — balík:** čistý priečinok len s runtime súbormi (`index.html`, `app.js`, `style.css`,
-  `app_images/`, `audio/`) bez pracovných dokumentov; z neho ZIP. Kritérium: funguje offline
-  z iného miesta na disku.
-- **H2 — návod A4 (po slovensky):** spustenie, tabuľka hesiel, ovládanie (klik/Enter/Escape,
-  ikonky reset+zvuk), riešenie problémov („zvuk až po prvom kliknutí" nie je chyba). Súčasť:
-  prepis rolí na Janku (majiteľka/prevádzkovateľka — rozhodnuté S16; historické záznamy sessions
-  sa NEprepisujú, mená Jakub/Janka smú ostať aj verejne — rozhodnuté S16).
-- **H3 — generálka odovzdania:** rozbaliť ZIP inde + prejsť D1 len podľa návodu.
-- **H4 — odovzdanie + uzávierka** (na mieste tábora ešte: hlasitosti na aparatúre — `HLASITOSTI`).
+**Hand-off HOTOVÝ (S17) — appka odovzdaná. Ostáva už len tábor samotný.**
+Balík `Davidova-cesta.zip` (23,4 MB: index.html + app.js + style.css + navod.html + 13 obrázkov + 17 mp3)
+otestovaný z inej lokácie a **skopírovaný na USB** (Janka). Na mieste tábora (13.–17. júl 2026) ostáva
+už len doladiť **hlasitosti na aparatúre** (`HLASITOSTI` v `app.js`) — to nie je vývojová úloha.
+
+Žiadna otvorená vývojová úloha. Ďalší pick je voliteľná bezpečnostná drobnosť (viď NEXT).
 
 ## NEXT (ordered next-pick queue)
-1. Hand-off H1–H4 — viď NOW.
-2. **Bezpečnosť účtu:** zapnúť 2FA na GitHub účte `jakubonovo-ai` (manuálny krok, ~5 min,
-   github.com/settings/security). Odporučené v S16 security posudku.
+1. **(Voliteľné) Bezpečnosť účtu:** zapnúť 2FA na GitHub účte (manuálny krok, ~5 min,
+   github.com/settings/security). Odporučené v S16 security posudku. Nie je blokujúce pre tábor.
 
 ## Recently shipped
+- **Hand-off vedúcemu H1–H4 (S17): HOTOVÝ.** H1 balík = čistý priečinok `Davidova-cesta` (4 runtime súbory +
+  navod.html + presne 13 reálne používaných obrázkov + 17 mp3; audit všetkých `app_images/` referencií v
+  `index.html`+`app.js`+`style.css` → žiadny nepoužitý/pracovný súbor). H3 generálka: strojová kontrola 30/30
+  lokálnych referencií má súbor v balíku (žiadny čierny podklad), offline audit balíka čistý (jediné http =
+  og:image na Pages, offline neškodné), ZIP rozbalený v inej lokácii = kompletný; **vizuálna generálka D1
+  prešla (Janka)**. H4: `Davidova-cesta.zip` (23,4 MB) **skopírovaný na USB**. Balík zámerne NIE v repe
+  (distribučný artefakt, žije v scratchpade). Na mieste tábora ostáva len doladenie hlasitostí.
 - **Fáza 8 — testovanie + go-live (S16):** offline audit čistý (0 sieťových odkazov; 12 obrázkov +
   17 mp3 case-match s diskom → Pages-safe), normalizácia hesiel overená (funguje bez diakritiky),
   TEST režim VYPNUTÝ (`TEST_REZIM_BEZ_HESIEL=false`), TS-002 offline test + TS-007 generálka

@@ -21,24 +21,11 @@ a store — detail lives in STATUS.md and session notes. One line per session in
 ## Last session
 _Newest first. ONE line per session: outcome headline + (resume: next action) if paused._
 
-- **S17 (2026-07-04)** — **Hand-off H2 časť: tlačiteľný návod + oprava thumbnailu/Pages.** (1) `navod.html` —
-  jedna A4, po slovensky (spustenie, tabuľka 5 hesiel+indícií, ovládanie, riešenie problémov, varovanie pred
-  resetom); **git-ignored** (obsahuje heslá = spoiler, NESMIE na public GitHub). (2) **Thumbnail nefungoval** —
-  príčina: po presune repa do org sa **Pages deploy rozbil** (3 buildy errored/cancelled, nasadený ostal starý
-  `de67911` bez obrázka → og-nahlad.jpg 404). Oprava: vyžiadaný build cez API (`POST .../pages/builds`) →
-  postavil najnovší `99a6955`, obrázok teraz 200. **Prevádzkový nález:** GitHub Pages sa po presune repa
-  neopravil sám — pri budúcom zaseknutom deployi reštartnúť build cez API. Kód appky nezmenený.
-  (3) **Prepis rolí na Janku HOTOVÝ** (`ef10d41`): Janka = jediná rola (vlastníčka/prevádzka/obsah/vývoj),
-  komunikácia s Jankou; Jakub mimo aktívnych rolí (len v historických záznamoch). Zmenené `CLAUDE.md` +
-  `project_build_plan.md`; STATUS.md história zámerne nedotknutá. (4) **Globálne 2 profily** v
-  `~/.claude/CLAUDE.md` (mimo repa): **Janka = default vlastníčka VŠETKÝCH projektov**, Jakub platí len keď
-  repo výslovne uvedie „Owner: Jakub" (samostatná sekcia). (resume: Janka schváli `navod.html` v prehliadači +
-  over WA náhľad cez `?x=1` → potom H1 balík/ZIP, H3 generálka, H4 odovzdanie.)
-- **S16 (2026-07-04)** — **Fáza 8 HOTOVÁ (TS-002+TS-007 prešli, TEST režim vypnutý) + pushnuté (public prijaté)
-  + repo presunuté na `davidova-cesta/davidova-cesta.github.io`** (Pages: davidova-cesta.github.io). Security
-  posudok: jediné reálne riziká = spoilery v public repe (prijaté), táborové údaje v docs (prijaté, mená OK),
-  e-mail v git autorstve (odstraňuje sa) + odporučené 2FA. OG náhľad pre WA/Messenger (`og-nahlad.jpg` 1200×630).
-  Hand-off H0 uzavreté, H1–H4 zakartované. Git história prepísaná bez e-mailu + force push (CONFIRM Jakub;
-  hashe commitov sa zmenili — staré odkazy v docs sú len historické). (resume: nová session → hand-off H1.)
-- **S15 (2026-07-04)** — **Slávnostný zvuk `zaver` na záverečnej obrazovke finále** (17. mp3, dodala Janka; hrá pri
-  Jeruzaleme v zlate, stop pri prekliku/Escape/resete) + oprava „Vypnúť zvuk" — stlmenie na VŠETKY `<audio>`.
+- **S17 (2026-07-04)** — **Hand-off DOKONČENÝ — APPKA ODOVZDANÁ na USB.** Návod A4 (`navod.html`, git-ignored
+  kvôli heslám) + balík `Davidova-cesta.zip` (23,4 MB: runtime + 13 obrázkov + 17 mp3, len reálne používané);
+  H3 generálka 30/30 referencií OK + vizuál D1 (Janka). Popri tom: oprava Pages deployu (rebuild cez API po
+  presune repa), prepis rolí na Janku (jediná rola; Jakub len v histórii) + globálne 2 profily. Ostáva len
+  tábor (hlasitosti na mieste). Balík zámerne nie v repe. **Žiadna otvorená vývojová úloha.**
+- **S16 (2026-07-04)** — **Fáza 8 HOTOVÁ + push (public prijaté) + repo presunuté na `davidova-cesta/…`.**
+  Security posudok (spoilery/údaje prijaté, e-mail odstránený z histórie + force push, 2FA odporučené),
+  OG náhľad pre WA/Messenger, hand-off H0 uzavreté. Detail v STATUS.md.
